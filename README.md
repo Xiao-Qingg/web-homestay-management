@@ -28,11 +28,19 @@ Dự án **Web Quản lý Homestay** được xây dựng bằng **PHP (MySQLi)*
 
 ## ⚙️ Cài đặt và chạy dự án
 
-Bước 1: Clone repository
+```
+Bước 1: Tải Xampp & MySQL
+```
+https://www.apachefriends.org/download.html
+https://dev.mysql.com/downloads/workbench/
+
+
+Bước 2: Clone repository trong thư mục htdocs của xampp
 ```bash
 git clone https://github.com/Xiao-Qingg/Web-Homestay-Management.git
-
-Bước 2: Tạo file config.php trong folder functions
+```
+Bước 3: Tạo file config.php trong folder functions
+```bash
 <?php
 return [
     'servername' => 'your_server',
@@ -41,4 +49,4 @@ return [
     'dbname' => 'homestay',
     'port' => your_port
 ];
-
+```

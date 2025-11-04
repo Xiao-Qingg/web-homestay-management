@@ -24,7 +24,7 @@ include './menu.php';
         <h1>Quản lý người dùng</h1>
         <div class="user-info">
             <span><?= htmlspecialchars($_SESSION['fullname'] ?? $_SESSION['username'] ?? 'Admin User') ?></span>
-            <a href="../../handles/logout_process.php" class="btn btn-outline-secondary btn-sm ms-2">Đăng xuất</a>
+            <a href="../../handles/logout_process.php" class="btn btn-outline-secondary btn-sm ms-2"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a>
         </div>
     </div>
 
@@ -67,12 +67,12 @@ include './menu.php';
                                 <a href="../../handles/user_process.php?action=delete&id=<?php echo $h['id']; ?>" 
                                     class="btn btn-danger btn-sm" 
                                     onclick="return confirm('Bạn có chắc muốn xóa?')">
-                                    Xóa
+                                    <i class="fa-solid fa-trash"></i>
                                 </a>
                                 <?php if ($h['status'] === 'Hoạt động'): ?>
-                                    <a href="../../handles/user_process.php?id=<?= $h['id'] ?>&action=lock" class="btn btn-warning btn-sm" style="background-color: #ffc107;color: #fff;">Khóa</a>
+                                    <a href="../../handles/user_process.php?id=<?= $h['id'] ?>&action=lock" class="btn btn-warning btn-sm" style="background-color: #ffc107;color: #fff;"><i class="fa-solid fa-lock"></i></a>
                                 <?php else: ?>
-                                    <a href="../../handles/user_process.php?id=<?= $h['id'] ?>&action=unlock" class="btn btn-success btn-sm">Mở</a>
+                                    <a href="../../handles/user_process.php?id=<?= $h['id'] ?>&action=unlock" class="btn btn-success btn-sm"><i class="fa-solid fa-lock-open"></i></a>
                                 <?php endif; ?>
                             </td>
                              

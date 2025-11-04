@@ -1,22 +1,20 @@
 <?php
+$config = include __DIR__ . '/config.php';
 
 function getDbConnection() {
-    $servername = "KHACHONG";
-    $username = "root";
-    $password = "Hongtran021005@";
-    $dbname = "homestay";
-    $port = 3306;
+    global $config;
+    $conn = mysqli_connect(
+        $config['servername'],
+        $config['username'],
+        $config['password'],
+        $config['dbname'],
+        $config['port']
+    );
 
-    // Tạo kết nối
-    $conn = mysqli_connect($servername, $username, $password, $dbname, $port);
-
-    // Kiểm tra kết nối
     if (!$conn) {
         die("Kết nối database thất bại: " . mysqli_connect_error());
     }
-    // Thiết lập charset cho kết nối (quan trọng để hiển thị tiếng Việt đúng)
     mysqli_set_charset($conn, "utf8");
     return $conn;
 }
-
 ?>

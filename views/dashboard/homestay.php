@@ -23,7 +23,7 @@ include './menu.php';
         <h1>Quản lý Homestay</h1>
         <div class="user-info">
             <span><?= htmlspecialchars($_SESSION['fullname'] ?? $_SESSION['username'] ?? 'Admin User') ?></span>
-            <a href="../../handles/logout_process.php" class="btn btn-outline-secondary btn-sm ms-2">Đăng xuất</a>
+            <a href="../../handles/logout_process.php" class="btn btn-outline-secondary btn-sm ms-2"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a>
         </div>
     </div>
 
@@ -82,11 +82,11 @@ include './menu.php';
                                 </span>
                             </td>
                             <td>
-                                <a href="./homestay/edit_homestay.php?id=<?= $h['id'] ?>" class="btn btn-primary btn-sm">Sửa</a>
+                                <a href="./homestay/edit_homestay.php?id=<?= $h['id'] ?>" class="btn btn-primary btn-sm"><i class="fa-solid fa-wrench"></i></a>
                                 <a href="../../handles/homestay_process.php?action=delete&id=<?php echo $h['id']; ?>" 
                                     class="btn btn-danger btn-sm" 
                                     onclick="return confirm('Bạn có chắc muốn xóa?')">
-                                    Xóa
+                                    <i class="fa-solid fa-trash"></i>
                                 </a>
                             </td>
                         </tr>

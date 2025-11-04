@@ -10,10 +10,7 @@ if (!file_exists($functions_path)) {
     exit;
 }
 require_once $functions_path;
-
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+require_once '../functions/user_functions.php';
 
 // Kiểm tra role admin
 if (isset($_SESSION['role_id']) && (int)$_SESSION['role_id'] === 1) {
@@ -23,55 +20,22 @@ if (isset($_SESSION['role_id']) && (int)$_SESSION['role_id'] === 1) {
     exit();
 }
 
-// Lấy ID homestay từ URL
-$homestay_id = (int)($_GET['id'] ?? 0);
-$homestay = null;
-
-if ($homestay_id > 0) {
-    $homestay = getHomestayById($homestay_id);
-}
-
-// Nếu không tìm thấy homestay, redirect về trang chủ
-if (!$homestay) {
-    header("Location: ../index.php");
-    exit();}
-
-
-
-// Kiểm tra đăng nhập
-if (!isset($_SESSION['user_id']) && !isset($_SESSION['id'])) {
-    header('Location: login.php');
+// Kiểm tra method POST
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header('Location: ../index.php');
     exit();
 }
 
-require_once '../functions/homestay_functions.php';
-require_once '../functions/user_functions.php';
-
-// Lấy ID user từ session
-$user_id = $_SESSION['user_id'] ?? $_SESSION['id'] ?? 0;
-
-// Lấy thông tin user từ database
-$user_info = getUserById($user_id);
-if (!$user_info) {
-    // Fallback nếu không tìm thấy trong DB
-    $user_fullname = $_SESSION['fullname'] ?? $_SESSION['username'] ?? '';
-    $user_email = $_SESSION['email'] ?? '';
-    $user_phone = $_SESSION['phone'] ?? '';
-    $user_address = $_SESSION['address'] ?? '';
-} else {
-    $user_fullname = $user_info['fullname'] ?? '';
-    $user_email = $user_info['email'] ?? '';
-    $user_phone = $user_info['phone'] ?? '';
-    $user_address = $user_info['address'] ?? '';
-}
-
-// Lấy thông tin từ URL
-$homestay_id = (int)($_GET['id'] ?? 0);
-$checkin = $_GET['checkin'] ?? date('Y-m-d');
-$checkout = $_GET['checkout'] ?? date('Y-m-d', strtotime('+1 days'));
-$guests = (int)($_GET['guests'] ?? 2);
-
-
+// ===== THAY ĐỔI TỪ ĐÂY =====
+// Lấy thông tin từ POST thay vì GET
+$user_id = (int)($_POST['user_id'] ?? 0);
+$homestay_id = (int)($_POST['homestay_id'] ?? 0);
+$checkin = $_POST['checkin'] ?? date('Y-m-d');
+$checkout = $_POST['checkout'] ?? date('Y-m-d', strtotime('+1 days'));
+$guests = (int)($_POST['guests'] ?? 1);
+$price_per_night = (float)($_POST['price_per_night'] ?? 0);
+$nights = (int)($_POST['nights'] ?? 1);
+$total = (float)($_POST['total'] ?? 0);
 
 // Lấy thông tin homestay
 $homestay = getHomestayById($homestay_id);
@@ -80,19 +44,42 @@ if (!$homestay) {
     exit();
 }
 
-// Tính số đêm
+// Kiểm tra đăng nhập
+$user_id = $_SESSION['user_id'] ?? $_SESSION['id'] ?? 0;
+if ($user_id <= 0) {
+    header('Location: login.php');
+    exit();
+}
+
+// Lấy thông tin user từ database
+$user_info = getUserById($user_id);
+if (!$user_info) {
+    $user_fullname = $_SESSION['fullname'] ?? $_SESSION['username'] ?? '';
+    $user_phone = $_SESSION['phone'] ?? '';
+    $user_address = $_SESSION['address'] ?? '';
+} else {
+    $user_fullname = $user_info['fullname'] ?? '';
+    $user_phone = $user_info['phone'] ?? '';
+    $user_address = $user_info['address'] ?? '';
+}
+
+// Tính lại để đảm bảo chính xác (phòng trường hợp JS bị sửa)
 $date1 = new DateTime($checkin);
 $date2 = new DateTime($checkout);
-$nights = $date1->diff($date2)->days;
-if ($nights <= 0) $nights = 1;
+$nights_calculated = $date1->diff($date2)->days;
+if ($nights_calculated <= 0) $nights_calculated = 1;
 
-// Tính giá
+$total = $homestay['price_per_night'] * $nights_calculated;
+
+
+// Dùng giá trị tính lại
+$nights = $nights_calculated;
 $price_per_night = $homestay['price_per_night'];
-$subtotal = $price_per_night * $nights;
-$service_fee = $subtotal * 0.1;
-$cleaning_fee = 100000;
-$total = $subtotal + $service_fee + $cleaning_fee;
+$subtotal = $total;
+
+
 ?>
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -103,185 +90,7 @@ $total = $subtotal + $service_fee + $cleaning_fee;
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <style>
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .booking-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .header {
-            text-align: center;
-            color: white;
-            margin-bottom: 30px;
-        }
-        
-        .header h1 {
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
-        
-        .content-layout {
-            display: grid;
-            grid-template-columns: 1fr 400px;
-            gap: 20px;
-        }
-        
-        .card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-        }
-        
-        .card h2 {
-            margin-bottom: 25px;
-            color: #2c3e50;
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 15px;
-        }
-        
-        .form-label {
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #2c3e50;
-        }
-        
-        .form-control, .form-select {
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        
-        .form-control:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-        
-        .homestay-preview {
-            display: flex;
-            gap: 15px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .homestay-preview img {
-            width: 100px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-        
-        .homestay-info h3 {
-            font-size: 18px;
-            margin-bottom: 5px;
-        }
-        
-        .homestay-info p {
-            color: #666;
-            font-size: 14px;
-            margin: 0;
-        }
-        
-        .booking-details {
-            margin-bottom: 20px;
-        }
-        
-        .detail-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        
-        .price-breakdown {
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .price-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-        
-        .total-row {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 2px solid #dee2e6;
-            font-size: 20px;
-            font-weight: bold;
-            color: #667eea;
-        }
-        
-        .btn-booking {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            width: 100%;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .btn-booking:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-        }
-        
-        .payment-methods {
-            display: grid;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .payment-option {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .payment-option:hover {
-            border-color: #667eea;
-            background: #f8f9ff;
-        }
-        
-        .payment-option input[type="radio"] {
-            margin-right: 15px;
-            width: 20px;
-            height: 20px;
-        }
-        
-        .payment-option.selected {
-            border-color: #667eea;
-            background: #f8f9ff;
-        }
-        
-        @media (max-width: 768px) {
-            .content-layout {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="../css/booking.css">
 </head>
 <body>
     <div class="booking-container">
@@ -295,7 +104,7 @@ $total = $subtotal + $service_fee + $cleaning_fee;
             <div class="card">
                 <h2><i class="fas fa-edit"></i> Thông tin đặt phòng</h2>
                 
-                <form action="../handles/booking_process.php" method="POST" id="bookingForm">
+                <form action="../handles/booking_process.php?action=create" method="POST" id="bookingForm">
                     <input type="hidden" name="user_id" value="<?= $user_id ?>">
                     <input type="hidden" name="homestay_id" value="<?= $homestay_id ?>">
                     <input type="hidden" name="price_per_night" value="<?= $price_per_night ?>">
@@ -311,11 +120,6 @@ $total = $subtotal + $service_fee + $cleaning_fee;
                             <input type="text" class="form-control" name="fullname" 
                                    value="<?= htmlspecialchars($user_fullname) ?>" required>
                         </div>
-                        <!-- <div class="col-md-6">
-                            <label class="form-label">Email <span class="text-danger">*</span></label>
-                            <input type="email" class="form-control" name="email" 
-                                   value="<?= htmlspecialchars($user_email) ?>" required>
-                        </div> -->
                         <div class="col-md-6">
                             <label class="form-label">Số điện thoại <span class="text-danger">*</span></label>
                             <input type="tel" class="form-control" name="phone" 
@@ -324,7 +128,6 @@ $total = $subtotal + $service_fee + $cleaning_fee;
                     </div>
 
                     <div class="row">
-                        
                         <div class="col-md-6">
                             <label class="form-label">Địa chỉ</label>
                             <input type="text" class="form-control" name="address" 
@@ -333,9 +136,8 @@ $total = $subtotal + $service_fee + $cleaning_fee;
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Số lượng khách</label>
-                        <input type="number" class="form-control" name="guests" 
-                           value="<?= $guests ?>" min="1" max="<?= $homestay['max_people'] ?>" required>
-
+                            <input type="number" class="form-control" name="guests" 
+                                   value="<?= $guests ?>" min="1" max="<?= $homestay['max_people'] ?? 10 ?>" required>
                         </div>
                     </div>
 
@@ -351,15 +153,7 @@ $total = $subtotal + $service_fee + $cleaning_fee;
                                    value="<?= $checkout ?>" id="checkoutInput" required>
                         </div>
                     </div>
-
-                    
-                    <label class="form-label">Yêu cầu đặc biệt</label>
-                    <textarea class="form-control" name="special_request" rows="4" 
-                              placeholder="VD: Cần giường phụ, đón sân bay..."></textarea>
-
-                    <h2 class="mt-4"><i class="fas fa-credit-card"></i> Phương thức thanh toán</h2>
-                    
-                    <div class="payment-methods">
+                    <!-- <div class="payment-methods">
                         <label class="payment-option selected">
                             <input type="radio" name="payment_method" value="bank_transfer" checked>
                             <div>
@@ -383,7 +177,7 @@ $total = $subtotal + $service_fee + $cleaning_fee;
                                 <small class="d-block text-muted">Thanh toán khi nhận phòng</small>
                             </div>
                         </label>
-                    </div>
+                    </div> -->
 
                     <div class="form-check mb-3">
                         <input class="form-check-input" type="checkbox" id="terms" required>
@@ -392,16 +186,16 @@ $total = $subtotal + $service_fee + $cleaning_fee;
                         </label>
                     </div>
 
-                    <button type="submit" class="btn-booking">
+                    <button type="submit" class="btn-booking "  >
                         <i class="fas fa-check-circle"></i> Xác nhận đặt phòng
                     </button>
                     <a href="homestay_detail.php?id=<?= $homestay_id ?>" class="btn btn-secondary w-100 mt-2">
                         <i class="fas fa-arrow-left"></i> Quay lại
                     </a>
-                </form>
+               
             </div>
 
-            <!-- Summary bên phải -->
+            <!-- GIỮ NGUYÊN PHẦN SUMMARY BÊN PHẢI -->
             <div class="card">
                 <h2><i class="fas fa-receipt"></i> Chi tiết đơn hàng</h2>
                 
@@ -436,21 +230,16 @@ $total = $subtotal + $service_fee + $cleaning_fee;
                 <div class="price-breakdown">
                     <div class="price-row">
                         <span><?= number_format($price_per_night) ?>đ x <span id="nightsCalc"><?= $nights ?></span> đêm</span>
-                        <strong id="subtotalDisplay"><?= number_format($subtotal) ?>đ</strong>
+                        <!-- <strong id="subtotalDisplay"><?= number_format($total) ?>đ</strong> -->
                     </div>
-                    <div class="price-row">
-                        <span>Phí dịch vụ</span>
-                        <strong id="serviceFeeDisplay"><?= number_format($service_fee) ?>đ</strong>
-                    </div>
-                    <div class="price-row">
-                        <span>Phí vệ sinh</span>
-                        <strong><?= number_format($cleaning_fee) ?>đ</strong>
-                    </div>
+                    
+                    
                     <div class="total-row">
                         <span>Tổng cộng</span>
-                        <strong id="totalDisplay"><?= number_format($total) ?>đ</strong>
+                        <strong id="total"><?= number_format($total) ?>đ</strong>
                     </div>
                 </div>
+                 </form>
 
                 <div class="alert alert-info">
                     <i class="fas fa-info-circle"></i>
@@ -465,10 +254,10 @@ $total = $subtotal + $service_fee + $cleaning_fee;
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
+        // GIỮ NGUYÊN JAVASCRIPT CŨ
         const pricePerNight = <?= $price_per_night ?>;
         const cleaningFee = <?= $cleaning_fee ?>;
 
-        // Payment option selection
         document.querySelectorAll('.payment-option').forEach(option => {
             option.addEventListener('click', function() {
                 document.querySelectorAll('.payment-option').forEach(opt => {
@@ -479,7 +268,6 @@ $total = $subtotal + $service_fee + $cleaning_fee;
             });
         });
 
-        // Tính lại giá khi đổi ngày
         function recalculate() {
             const checkin = new Date(document.getElementById('checkinInput').value);
             const checkout = new Date(document.getElementById('checkoutInput').value);
@@ -487,16 +275,13 @@ $total = $subtotal + $service_fee + $cleaning_fee;
             
             if (nights > 0) {
                 const subtotal = pricePerNight * nights;
-                const serviceFee = subtotal * 0.1;
-                const total = subtotal + serviceFee + cleaningFee;
+              
                 
                 document.getElementById('nightsDisplay').textContent = `${nights} đêm`;
                 document.getElementById('nightsCalc').textContent = nights;
-                document.getElementById('subtotalDisplay').textContent = `${subtotal.toLocaleString()}đ`;
-                document.getElementById('serviceFeeDisplay').textContent = `${serviceFee.toLocaleString()}đ`;
-                document.getElementById('totalDisplay').textContent = `${total.toLocaleString()}đ`;
+                document.getElementById('total').textContent = `${total.toLocaleString()}đ`;
+          
                 
-                // Update hidden field
                 document.querySelector('input[name="nights"]').value = nights;
                 document.querySelector('input[name="total"]').value = total;
             }
@@ -505,7 +290,6 @@ $total = $subtotal + $service_fee + $cleaning_fee;
         document.getElementById('checkinInput').addEventListener('change', recalculate);
         document.getElementById('checkoutInput').addEventListener('change', recalculate);
 
-        // Form validation
         document.getElementById('bookingForm').addEventListener('submit', function(e) {
             if (!document.getElementById('terms').checked) {
                 e.preventDefault();

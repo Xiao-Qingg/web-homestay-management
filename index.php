@@ -92,13 +92,33 @@ if (isset($_GET['rooms']) && !empty($_GET['rooms'])) {
     <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
+        <!-- Thông báo thành công -->
+    <?php if (isset($_SESSION['booking_success'])): ?>
+         <script>
+                alert("<?= htmlspecialchars($_SESSION['booking_success']) ?>");
+            </script>
+    <?php 
+        unset($_SESSION['booking_success']); 
+    endif; 
+    ?>
+
+    <!-- Thông báo lỗi nếu có -->
+    <?php if (isset($_GET['error'])): ?>
+    <div class="notification-container">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <h5 class="alert-heading"><i class="fas fa-exclamation-circle"></i> Lỗi!</h5>
+            <p class="mb-0"><?= htmlspecialchars($_GET['error']) ?></p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+    <?php endif; ?>
     <!-- Top Bar -->
     <div class="top-bar">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-4">
                     <span><i class="fas fa-phone"></i> 0123-456-789</span>
-                    <span class="ms-3"><i class="fas fa-envelope"></i> info@homestay.vn</span>
+                    <span class="ms-3"><i class="fas fa-envelope"></i> group22@homestay.vn</span>
                 </div>
                 <div class="col-md-4 text-center">
                     <span class="discount-badge">
@@ -122,8 +142,8 @@ if (isset($_GET['rooms']) && !empty($_GET['rooms'])) {
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-3">
-                    <a href="index.php" class="logo">
-                        <i class="fas fa-home"></i> Homestay Paradise
+                    <a href="index.php" class="logo" style="font-size:26px ">
+                        <i class="fas fa-home"></i> Group 22 
                     </a>
                 </div>
                 <div class="col-md-5">
@@ -151,8 +171,8 @@ if (isset($_GET['rooms']) && !empty($_GET['rooms'])) {
                                 <i class="fas fa-user"></i> Hi, <?= htmlspecialchars($fullname) ?>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="../views/profile.php"><i class="fas fa-user-circle"></i> Hồ sơ</a></li>
-                                <li><a class="dropdown-item" href="../views/my_bookings.php"><i class="fas fa-calendar"></i> Đặt phòng của tôi</a></li>
+                                <li><a class="dropdown-item" href="./views/profile.php"><i class="fas fa-user-circle"></i> Hồ sơ</a></li>
+                                <li><a class="dropdown-item" href="./views/my_bookings.php"><i class="fas fa-calendar"></i> Đặt phòng của tôi</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="./handles/logout_process.php"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
                             </ul>
@@ -338,6 +358,9 @@ if (isset($_GET['rooms']) && !empty($_GET['rooms'])) {
                             <a href="./views/homestay_detail.php?id=<?php echo $homestay['id']; ?>" class="btn btn-primary-custom">
                                 <i class="fas fa-eye"></i> Xem chi tiết
                             </a>
+                            <a href="./views/addToCart.php?id=<?php echo $homestay['id']; ?>" class="btn btn-primary-custom">
+                                <i class="fas fa-shopping-cart fa-lg"></i> Thêm vào giỏ hàng
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -412,6 +435,13 @@ if (isset($_GET['rooms']) && !empty($_GET['rooms'])) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     
     <script>
+    //      setTimeout(function() {
+    //     const alerts = document.querySelectorAll('.alert');
+    //     alerts.forEach(function(alert) {
+    //         const bsAlert = new bootstrap.Alert(alert);
+    //         bsAlert.close();
+    //     });
+    // }, 5000);
         // Smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {

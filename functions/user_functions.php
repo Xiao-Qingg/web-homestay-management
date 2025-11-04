@@ -191,4 +191,24 @@ function toggleUserStatus($id) {
     return false;
 }
 
+function updateUserProfile($id, $fullname, $phone, $address) {
+    $conn = getDbConnection();
+
+    $sql = "UPDATE users SET fullname = ?, phone = ?, address = ? WHERE id = ?";
+    $stmt = mysqli_prepare($conn, $sql);
+
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, "sssi", $fullname, $phone, $address, $id);
+        $success = mysqli_stmt_execute($stmt);
+
+        mysqli_stmt_close($stmt);
+        mysqli_close($conn);
+        return $success;
+    }
+
+    mysqli_close($conn);
+    return false;
+}
+
+
 ?>

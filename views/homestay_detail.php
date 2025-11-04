@@ -59,34 +59,34 @@ $logged = isset($_SESSION['id']) || isset($_SESSION['user_id']);
     <style>
 
         .section table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-    font-family: Arial, sans-serif;
-}
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-family: Arial, sans-serif;
+        }
 
-.section th, .section td {
-    border: 1px solid #ccc;
-    padding: 10px;
-}
+        .section th, .section td {
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
 
-.section th {
-    background-color: #f5f5f5;
-    color: #333;
-}
+        .section th {
+            background-color: #f5f5f5;
+            color: #333;
+        }
 
-.section tr:nth-child(even) {
-    background-color: #fafafa;
-}
+        .section tr:nth-child(even) {
+            background-color: #fafafa;
+        }
 
-.section img {
-    border-radius: 8px;
-    transition: transform 0.2s ease;
-}
+        .section img {
+            border-radius: 8px;
+            transition: transform 0.2s ease;
+        }
 
-.section img:hover {
-    transform: scale(1.05);
-}
+        .section img:hover {
+            transform: scale(1.05);
+        }
 
     </style>
     <!-- Top Bar giống Index -->
@@ -95,7 +95,7 @@ $logged = isset($_SESSION['id']) || isset($_SESSION['user_id']);
             <div class="row align-items-center">
                 <div class="col-md-4">
                     <span><i class="fas fa-phone"></i> 0123-456-789</span>
-                    <span class="ms-3"><i class="fas fa-envelope"></i> info@homestay.vn</span>
+                    <span class="ms-3"><i class="fas fa-envelope"></i> group22@homestay.vn</span>
                 </div>
                 <div class="col-md-4 text-center">
                     <span class="discount-badge">
@@ -120,7 +120,7 @@ $logged = isset($_SESSION['id']) || isset($_SESSION['user_id']);
             <div class="row align-items-center">
                 <div class="col-md-3">
                     <a href="../index.php" class="logo">
-                        <i class="fas fa-home"></i> Homestay Paradise
+                        <i class="fas fa-home"></i> Group 22
                     </a>
                 </div>
                 <div class="col-md-5">
@@ -246,27 +246,26 @@ $logged = isset($_SESSION['id']) || isset($_SESSION['user_id']);
                 
 
                 <div class="section">
-                    <h2>Danh sách phòng</h2>
                     <table border="1" cellspacing="0" cellpadding="8" style="width:100%; border-collapse: collapse; text-align: center;">
                         <thead style="background-color: #f0f0f0;">
                             <tr>
                                 <th>Tên phòng</th>
-                                <th>Giá / đêm (VNĐ)</th>
+                                <!-- <th>Giá / đêm (VNĐ)</th> -->
                                 <th>Sức chứa</th>
                                 <th>Tiện nghi</th>
                                 <th>Mô tả</th>
-                                <th>Đặt phòng</th>
+                                <!-- <th>Đặt phòng</th> -->
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($rooms as $room): ?>
                                 <tr>
                                     <td><?= htmlspecialchars($room['room_name']) ?></td>
-                                    <td><?= number_format($room['price']) ?></td>
+                                    <!-- <td><?= number_format($room['price']) ?></td> -->
                                     <td><?= htmlspecialchars($room['capacity']) ?> người</td>
                                     <td><?= htmlspecialchars($room['amenity_name']) ?></td>
                                     <td><?= htmlspecialchars($room['description']) ?></td>
-                                     <td>
+                                     <!-- <td>
                                         <form class="booking-room-form" method="GET" action="../views/booking.php">
                                             <input type="hidden" name="room_id" value="<?= $room['id'] ?>">
                                             <input type="hidden" name="price" value="<?= $room[''] ?>">
@@ -277,7 +276,7 @@ $logged = isset($_SESSION['id']) || isset($_SESSION['user_id']);
                                                 <i class="fas fa-calendar-check"></i> Đặt phòng
                                             </button>
                                         </form>
-                                    </td>
+                                    </td> -->
                                     
                                 </tr>
                             <?php endforeach; ?>
@@ -356,57 +355,78 @@ $logged = isset($_SESSION['id']) || isset($_SESSION['user_id']);
 
             <!-- Sidebar - Booking Card -->
             <div class="sidebar">
-                <div class="booking-card">
-                    <div class="price-section">
-                        <div class="price"><?= number_format($homestay['price_per_night']) ?>đ</div>
-                        <div class="price-label">mỗi đêm</div>
-                    </div>
-
-                    <div class="date-picker">
-                        <div>
-                            <div class="date-label">NHẬN PHÒNG</div>
-                            <input type="date" class="date-input" id="checkin" value="<?= date('Y-m-d') ?>">
+                <form action="./booking.php" method="POST" id="bookingForm">
+                    <div class="booking-card">
+                        <div class="price-section">
+                            <div class="price"><?= number_format($homestay['price_per_night']) ?>đ</div>
+                            <div class="price-label">mỗi đêm</div>
                         </div>
-                        <div>
-                            <div class="date-label">TRẢ PHÒNG</div>
-                            <input type="date" class="date-input" id="checkout" value="<?= date('Y-m-d', strtotime('+1 days')) ?>">
-                        </div>
-                    </div>
 
-                    <div class="guest-selector">
-                        <div class="guest-row">
-                            <span>Số khách</span>
-                            <div class="guest-controls">
-                                <button class="guest-btn" onclick="changeGuests(-1)">−</button>
-                                <span class="guest-count" id="guestCount">1</span>
-                                <button class="guest-btn" onclick="changeGuests(1)">+</button>
+                        <div class="date-picker">
+                            <div>
+                                <div class="date-label">NHẬN PHÒNG</div>
+                                <input type="date" 
+                                    class="date-input" 
+                                    id="checkin" 
+                                    name="checkin"
+                                    value="<?= date('Y-m-d') ?>"
+                                    min="<?= date('Y-m-d') ?>"
+                                    required>
+                            </div>
+                            <div>
+                                <div class="date-label">TRẢ PHÒNG</div>
+                                <input type="date" 
+                                    class="date-input" 
+                                    id="checkout" 
+                                    name="checkout"
+                                    value="<?= date('Y-m-d', strtotime('+1 days')) ?>"
+                                    min="<?= date('Y-m-d', strtotime('+1 days')) ?>"
+                                    required>
+                            </div>
+                        </div>
+
+                        <div class="guest-selector">
+                            <div class="guest-row">
+                                <span>Số khách</span>
+                                <div class="guest-controls">
+                                    <button type="button" class="guest-btn" onclick="changeGuests(-1)">−</button>
+                                    <span class="guest-count" id="guestCount">1</span>
+                                    <button type="button" class="guest-btn" onclick="changeGuests(1)">+</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Hidden inputs để gửi dữ liệu -->
+                        <input type="hidden" name="homestay_id" value="<?= $homestay['id'] ?>">
+                        <input type="hidden" name="homestay_name" value="<?= htmlspecialchars($homestay['homestay_name']) ?>">
+                        <input type="hidden" name="price_per_night" value="<?= $homestay['price_per_night'] ?>">
+                        <input type="hidden" name="guests" id="guestsInput" value="1">
+                        <input type="hidden" name="nights" id="nightsInput" value="1">
+                        <input type="hidden" name="subtotal" id="subtotalInput" value="<?= $homestay['price_per_night'] ?>">
+                        <input type="hidden" name="service_fee" id="serviceFeeInput" value="<?= $homestay['price_per_night'] * 0.1 ?>">
+                        <input type="hidden" name="total" id="totalInput" value="<?= $homestay['price_per_night'] * 1.1 ?>">
+
+                        <button type="submit" class="btn-booking w-100">
+                            <i class="fas fa-shopping-cart fa-lg"></i> Đặt ngay
+                        </button>
+
+                        <div style="text-align: center; margin-top: 15px; color: #666; font-size: 14px;">
+                            Bạn sẽ chưa bị tính phí
+                        </div>
+
+                        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e0e0e0;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <span id="priceCalc"><?= number_format($homestay['price_per_night']) ?>đ x 1 đêm</span>
+                                <!-- <span id="subtotal"><?= number_format($homestay['price_per_night']) ?>đ</span> -->
+                            </div>
+                            
+                            <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 18px; margin-top: 15px; padding-top: 15px; border-top: 1px solid #e0e0e0;">
+                                <span>Tổng cộng</span>
+                                <span id="subtotal"><?= number_format($homestay['price_per_night']) ?>đ</span>
                             </div>
                         </div>
                     </div>
-
-                    <button class="btn-booking w-100" onclick="bookNow()">
-                        <i class="fas fa-shopping-cart fa-lg"></i> Đặt ngay
-                    </button>
-
-                    <div style="text-align: center; margin-top: 15px; color: #666; font-size: 14px;">
-                        Bạn sẽ chưa bị tính phí
-                    </div>
-
-                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e0e0e0;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                            <span id="priceCalc"><?= number_format($homestay['price_per_night']) ?>đ x 1 đêm</span>
-                            <span id="subtotal"><?= number_format($homestay['price_per_night'] * 1) ?>đ</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                            <span>Phí dịch vụ</span>
-                            <span id="serviceFee"><?= number_format($homestay['price_per_night'] * 1 * 0.1) ?>đ</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 18px; margin-top: 15px; padding-top: 15px; border-top: 1px solid #e0e0e0;">
-                            <span>Tổng cộng</span>
-                            <span id="totalPrice"><?= number_format($homestay['price_per_night'] * 1 * 1.1) ?>đ</span>
-                        </div>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
@@ -449,47 +469,87 @@ $logged = isset($_SESSION['id']) || isset($_SESSION['user_id']);
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script>
-        let guestCount = 2;
-        const pricePerNight = <?= $homestay['price_per_night'] ?>;
+   <script>
+let guestCount = 1;
+const pricePerNight = <?= $homestay['price_per_night'] ?>;
+const maxGuests = <?= $homestay['max_guests'] ?? 10 ?>;
 
-        function changeGuests(delta) {
-            const newCount = guestCount + delta;
-            if (newCount >= 1 && newCount <= <?= $homestay['max_people'] ?>) {
-                guestCount = newCount;
-                document.getElementById('guestCount').textContent = guestCount;
-            }
-        }
+// Thay đổi số khách
+function changeGuests(delta) {
+    const newCount = guestCount + delta;
+    if (newCount >= 1 && newCount <= maxGuests) {
+        guestCount = newCount;
+        document.getElementById('guestCount').textContent = guestCount;
+        document.getElementById('guestsInput').value = guestCount;
+    }
+}
 
-        function calculateTotal() {
-            const checkin = new Date(document.getElementById('checkin').value);
-            const checkout = new Date(document.getElementById('checkout').value);
-            const nights = Math.ceil((checkout - checkin) / (1000 * 60 * 60 * 24));
-            
-            if (nights > 0) {
-                const subtotal = pricePerNight * nights;
-                const serviceFee = subtotal * 0.1;
-                const total = subtotal + serviceFee;
-                
-                document.getElementById('priceCalc').textContent = `${pricePerNight.toLocaleString()}đ x ${nights} đêm`;
-                document.getElementById('subtotal').textContent = `${subtotal.toLocaleString()}đ`;
-                document.getElementById('serviceFee').textContent = `${serviceFee.toLocaleString()}đ`;
-                document.getElementById('totalPrice').textContent = `${total.toLocaleString()}đ`;
-            }
-        }
+// Tính số đêm
+function calculateNights() {
+    const checkinDate = new Date(document.getElementById('checkin').value);
+    const checkoutDate = new Date(document.getElementById('checkout').value);
+    const timeDiff = checkoutDate - checkinDate;
+    const nights = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+    return nights > 0 ? nights : 1;
+}
 
-        document.getElementById('checkin').addEventListener('change', calculateTotal);
-        document.getElementById('checkout').addEventListener('change', calculateTotal);
+// Cập nhật giá
+function updatePrice() {
+    const nights = calculateNights();
+    const subtotal = pricePerNight * nights;
+    const serviceFee = subtotal * 0.1;
+    const total = subtotal + serviceFee;
 
-        function bookNow() {
-            <?php if ($logged): ?>
-                window.location.href = '../views/booking.php?id=<?= $homestay['id'] ?>';
-            <?php else: ?>
-                if (confirm('Bạn cần đăng nhập để đặt phòng. Chuyển đến trang đăng nhập?')) {
-                    window.location.href = '../views/login.php';
-                }
-            <?php endif; ?>
-        }
-    </script>
+    // Cập nhật hiển thị
+    document.getElementById('priceCalc').textContent = `${pricePerNight.toLocaleString('vi-VN')}đ x ${nights} đêm`;
+    document.getElementById('subtotal').textContent = `${subtotal.toLocaleString('vi-VN')}đ`;
+    document.getElementById('serviceFee').textContent = `${serviceFee.toLocaleString('vi-VN')}đ`;
+    document.getElementById('totalPrice').textContent = `${total.toLocaleString('vi-VN')}đ`;
+
+    // Cập nhật hidden inputs
+    document.getElementById('nightsInput').value = nights;
+    document.getElementById('subtotalInput').value = subtotal;
+    document.getElementById('serviceFeeInput').value = serviceFee;
+    document.getElementById('totalInput').value = total;
+}
+
+// Xác thực ngày trước khi submit
+document.getElementById('bookingForm').addEventListener('submit', function(e) {
+    const checkin = new Date(document.getElementById('checkin').value);
+    const checkout = new Date(document.getElementById('checkout').value);
+    
+    if (checkout <= checkin) {
+        e.preventDefault();
+        alert('Ngày trả phòng phải sau ngày nhận phòng!');
+        return false;
+    }
+    
+    const nights = calculateNights();
+    if (nights < 1) {
+        e.preventDefault();
+        alert('Vui lòng chọn ngày hợp lệ!');
+        return false;
+    }
+});
+
+// Cập nhật giá khi thay đổi ngày
+document.getElementById('checkin').addEventListener('change', function() {
+    const checkin = new Date(this.value);
+    const checkout = document.getElementById('checkout');
+    const minCheckout = new Date(checkin);
+    minCheckout.setDate(minCheckout.getDate() + 1);
+    checkout.min = minCheckout.toISOString().split('T')[0];
+    
+    if (new Date(checkout.value) <= checkin) {
+        checkout.value = minCheckout.toISOString().split('T')[0];
+    }
+    updatePrice();
+});
+
+document.getElementById('checkout').addEventListener('change', updatePrice);
+
+// Khởi tạo giá ban đầu
+updatePrice();
+</script>   
 </body>
 </html>

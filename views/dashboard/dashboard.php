@@ -1,17 +1,27 @@
 <?php
-session_start();
+// session_start();
 $current_page = 'dashboard';
 $page_title = 'Dashboard';
 
 // Load functions
 require_once __DIR__ . '/../../handles/homestay_process.php';
 require_once __DIR__ . '/../../handles/user_process.php';
+require_once __DIR__ . '/../../handles/booking_process.php';
+
 // Lấy số liệu thống kê
 $homestays = handleGetAllHomestays();
 $total_homestays = count($homestays);
 
 $users = handleGetAllUsers();
 $total_users = count($users);
+
+$bookings = handleGetAllBookings();
+$total_bookings = count($bookings);
+
+$total = 0;
+foreach ($bookings as $booking) {
+    $total += $booking['total_price'];
+}
 
 // include './header.php';
 include './menu.php';
@@ -27,19 +37,19 @@ include './menu.php';
 </head>
 <body>
 <style>
-.stat-container {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-.stat-card {
-    flex: 1;
-    min-width: 220px;
-    padding: 20px;
-    border-radius: 12px;
-    text-align: center;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    .stat-container {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+    .stat-card {
+        flex: 1;
+        min-width: 220px;
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 </style>
 
@@ -48,7 +58,7 @@ include './menu.php';
         <h1>Dashboard</h1>
         <div class="user-info">
             <span><?= htmlspecialchars($_SESSION['fullname'] ?? $_SESSION['username'] ?? 'Admin User') ?></span>
-            <a href="../../handles/logout_process.php" class="btn btn-outline-secondary btn-sm ms-2">Đăng xuất</a>
+            <a href="../../handles/logout_process.php" class="btn btn-outline-secondary btn-sm ms-2"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a>
         </div>
     </div>
 
@@ -61,7 +71,7 @@ include './menu.php';
             </div>
             <div class="stat-card" style="background:#e8f5e9;">
                 <h3 style="color:#388e3c;">Đặt phòng</h3>
-                <p style="font-size:36px;font-weight:bold;color:#2e7d32;">25</p>
+                <p style="font-size:36px;font-weight:bold;color:#2e7d32;"><?= $total_bookings?></p>
             </div>
             <div class="stat-card" style="background:#fff3e0;">
                 <h3 style="color:#f57c00;">Người dùng</h3>
@@ -69,7 +79,7 @@ include './menu.php';
             </div>
             <div class="stat-card" style="background:#fce4ec;">
                 <h3 style="color:#c2185b;">Doanh thu</h3>
-                <p style="font-size:36px;font-weight:bold;color:#ad1457;">50M đ</p>
+                <p style="font-size:36px;font-weight:bold;color:#ad1457;"><?= $total?> đ</p>
             </div>
         </div>
 

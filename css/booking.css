@@ -1,154 +1,152 @@
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* GIỮ NGUYÊN CSS CŨ */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #4b78bc 0%, #295370 100%);
             min-height: 100vh;
             padding: 20px;
         }
-
-        .container {
+        
+        .booking-container {
             max-width: 1200px;
             margin: 0 auto;
         }
-
-        /* Header */
+        
         .header {
             text-align: center;
             color: white;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
-
+        
         .header h1 {
-            font-size: 36px;
+            font-size: 32px;
             margin-bottom: 10px;
         }
-
-        .header p {
-            font-size: 18px;
-            opacity: 0.9;
-        }
-
-        /* Steps */
-        .steps {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-
-        .step {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: white;
-            opacity: 0.6;
-            transition: all 0.3s;
-        }
-
-        .step.active {
-            opacity: 1;
-            font-weight: bold;
-        }
-
-        .step-number {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-
-        .step.active .step-number {
-            background: white;
-            color: #667eea;
-        }
-
-        .step.completed .step-number {
-            background: #27ae60;
-            color: white;
-        }
-
-        /* Main Layout */
-        .booking-layout {
+        
+        .content-layout {
             display: grid;
             grid-template-columns: 1fr 400px;
-            gap: 30px;
+            gap: 20px;
         }
-
+        
         .card {
             background: white;
-            border-radius: 20px;
+            border-radius: 15px;
             padding: 30px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         }
-
+        
         .card h2 {
-            font-size: 24px;
             margin-bottom: 25px;
             color: #2c3e50;
             border-bottom: 2px solid #f0f0f0;
             padding-bottom: 15px;
         }
-
-        /* Form */
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
+        
+        .form-label {
             font-weight: 600;
+            margin-bottom: 8px;
             color: #2c3e50;
-            font-size: 14px;
         }
-
-        .form-group label .required {
-            color: #e74c3c;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 15px;
+        
+        .form-control, .form-select {
+            padding: 12px;
             border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 15px;
-            transition: all 0.3s;
-            font-family: inherit;
+            border-radius: 8px;
+            margin-bottom: 20px;
         }
-
+        
         .form-control:focus {
-            outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+        
+        .homestay-preview {
+            display: flex;
             gap: 15px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 20px;
         }
-
-        textarea.form-control {
-            resize: vertical;
-            min-height: 100px;
+        
+        .homestay-preview img {
+            width: 100px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
         }
-
-        /* Payment Methods */
+        
+        .homestay-info h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .homestay-info p {
+            color: #666;
+            font-size: 14px;
+            margin: 0;
+        }
+        
+        .booking-details {
+            margin-bottom: 20px;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .price-breakdown {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #dee2e6;
+            font-size: 20px;
+            font-weight: bold;
+            color: linear-gradient(135deg, #4b78bc 0%, #295370 100%);;
+        }
+        
+        .btn-booking {
+            background: linear-gradient(135deg, #4b78bc 0%, #295370 100%);
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-booking:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        
         .payment-methods {
             display: grid;
             gap: 15px;
+            margin-bottom: 20px;
         }
-
+        
         .payment-option {
             display: flex;
             align-items: center;
@@ -158,259 +156,26 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-
+        
         .payment-option:hover {
             border-color: #667eea;
             background: #f8f9ff;
         }
-
+        
         .payment-option input[type="radio"] {
             margin-right: 15px;
             width: 20px;
             height: 20px;
-            cursor: pointer;
         }
-
+        
         .payment-option.selected {
             border-color: #667eea;
             background: #f8f9ff;
         }
-
-        .payment-icon {
-            font-size: 24px;
-            margin-right: 10px;
-        }
-
-        /* Summary Card */
-        .summary-card {
-            position: sticky;
-            top: 20px;
-        }
-
-        .homestay-preview {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 25px;
-            padding-bottom: 25px;
-            border-bottom: 2px solid #f0f0f0;
-        }
-
-        .homestay-image {
-            width: 120px;
-            height: 90px;
-            border-radius: 10px;
-            object-fit: cover;
-        }
-
-        .homestay-info h3 {
-            font-size: 18px;
-            margin-bottom: 8px;
-            color: #2c3e50;
-        }
-
-        .homestay-info p {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
-
-        .booking-details {
-            margin-bottom: 25px;
-        }
-
-        .detail-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            padding: 12px 0;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .detail-row:last-child {
-            border-bottom: none;
-        }
-
-        .detail-label {
-            color: #666;
-            font-size: 14px;
-        }
-
-        .detail-value {
-            font-weight: 600;
-            color: #2c3e50;
-        }
-
-        /* Price Breakdown */
-        .price-breakdown {
-            margin-bottom: 25px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 12px;
-        }
-
-        .price-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 12px;
-            font-size: 15px;
-        }
-
-        .total-row {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 2px solid #dee2e6;
-            font-size: 20px;
-            font-weight: bold;
-            color: #667eea;
-        }
-
-        /* Buttons */
-        .btn {
-            padding: 16px 32px;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-            width: 100%;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-        }
-
-        .btn-secondary {
-            background: white;
-            color: #667eea;
-            border: 2px solid #667eea;
-            margin-top: 15px;
-        }
-
-        .btn-secondary:hover {
-            background: #f8f9ff;
-        }
-
-        /* Policy Box */
-        .policy-box {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        .policy-box h4 {
-            margin-bottom: 10px;
-            color: #856404;
-        }
-
-        /* Checkbox */
-        .checkbox-group {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .checkbox-group input[type="checkbox"] {
-            margin-top: 4px;
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-        }
-
-        .checkbox-group label {
-            font-size: 14px;
-            line-height: 1.5;
-            cursor: pointer;
-        }
-
-        /* Success Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.7);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.show {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            max-width: 500px;
-            text-align: center;
-            animation: slideUp 0.3s ease-out;
-        }
-
-        @keyframes slideUp {
-            from {
-                transform: translateY(50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .success-icon {
-            font-size: 80px;
-            margin-bottom: 20px;
-        }
-
-        .modal-content h2 {
-            color: #27ae60;
-            margin-bottom: 15px;
-        }
-
-        .booking-code {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 24px;
-            font-weight: bold;
-            color: #667eea;
-            margin: 20px 0;
-        }
-
+        
         @media (max-width: 768px) {
-            .booking-layout {
+            .content-layout {
                 grid-template-columns: 1fr;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .steps {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .summary-card {
-                position: static;
             }
         }
+    

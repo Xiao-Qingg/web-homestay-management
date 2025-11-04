@@ -26,51 +26,19 @@ Dự án **Web Quản lý Homestay** được xây dựng bằng **PHP (MySQLi)*
 
 ---
 
-## 📂 Cấu trúc thư mục
+## ⚙️ Cài đặt và chạy dự án
 
-WEB-HOMESTAY-MANAGEMENT/
-├── css/
-│   ├── booking.css
-│   ├── dashboard.css
-│   ├── homestay_detail.css
-│   ├── login.css
-│   └── style.css
-├── functions/
-│   ├── auth_functions.php
-│   ├── booking_function.php
-│   ├── config.php
-│   ├── db_connection.php
-│   ├── homestay_functions.php
-│   ├── payment_function.php
-│   ├── rooms_functions.php
-│   └── user_functions.php
-├── handlers/
-│   ├── booking-process.php
-│   ├── homestay-process.php
-│   ├── login_process.php
-│   ├── logout_process.php
-│   ├── profile_process.php
-│   └── user_process.php
-├── images/
-│   ├── sidebar.png
-│   ├── sidebar2.png
-│   └── sidebar3.png
-├── views/
-│   └── dashboard/
-│   │    ├── homestay/
-│   │    │   ├── create_homestay.php
-│   │    │   ├── edit_homestay.php
-│   │    ├── booking.php
-│   │    ├── dashboard.php
-│   │    ├── homestay.php
-│   │    ├── menu.php
-│   │    ├── user.php
-│   ├── booking.php
-│   ├── homestay_detail.php
-│   ├── login.php
-│   ├── my_bookings.php
-│   ├── profile.php
-│   ├── register.php
-│   gitignore
-│   index.php
-└── README.md
+Bước 1: Clone repository
+```bash
+git clone https://github.com/Xiao-Qingg/Web-Homestay-Management.git
+
+Bước 2: Tạo file config.php trong folder functions
+<?php
+return [
+    'servername' => 'your_server',
+    'username' => 'your_username',
+    'password' => 'your_password',
+    'dbname' => 'homestay',
+    'port' => your_port
+];
+

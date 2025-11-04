@@ -28,10 +28,10 @@ Dự án **Web Quản lý Homestay** được xây dựng bằng **PHP (MySQLi)*
 
 ## ⚙️ Cài đặt và chạy dự án
 
-```
 Bước 1: Tải Xampp & MySQL
 ```
-https://www.apachefriends.org/download.html
+https://www.apachefriends.org/download.html 
+```
 https://dev.mysql.com/downloads/workbench/
 
 

@@ -43,7 +43,7 @@ $current_page = $current_page ?? 'dashboard';
             </a>
         </li>
         <li>
-            <a href="statistic.php" class="<?= ($current_page === 'statistics') ? 'active' : ''; ?>">
+            <a href="statistics.php" class="<?= ($current_page === 'statistics') ? 'active' : ''; ?>">
                 <span><i class="fa-solid fa-chart-line"></i></span> Thống kê
             </a>
         </li>

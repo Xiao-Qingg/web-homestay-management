@@ -209,6 +209,24 @@ function updateUserProfile($id, $fullname, $phone, $address) {
     mysqli_close($conn);
     return false;
 }
+function changeNewPassword($id, $password) {
+    $conn = getDbConnection();
+
+    $sql = "UPDATE users SET password?";
+    $stmt = mysqli_prepare($conn, $sql);
+
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, "sssi", $fullname, $phone, $address, $id);
+        $success = mysqli_stmt_execute($stmt);
+
+        mysqli_stmt_close($stmt);
+        mysqli_close($conn);
+        return $success;
+    }
+
+    mysqli_close($conn);
+    return false;
+}
 
 
 ?>

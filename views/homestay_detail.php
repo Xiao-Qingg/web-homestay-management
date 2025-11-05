@@ -53,7 +53,7 @@ $logged = isset($_SESSION['id']) || isset($_SESSION['user_id']);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- CSS riêng cho detail -->
-    <link rel="stylesheet" href="../css/homestay_detail.css">
+   <link rel="stylesheet" href="/web-homestay-management/css/homestay_detail.css">
 </head>
 <body>
     <style>
@@ -119,7 +119,7 @@ $logged = isset($_SESSION['id']) || isset($_SESSION['user_id']);
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-3">
-                    <a href="../index.php" class="logo">
+                    <a href="/web-homestay-management/index.php" class="logo">
                         <i class="fas fa-home"></i> Group 22
                     </a>
                 </div>
@@ -143,7 +143,7 @@ $logged = isset($_SESSION['id']) || isset($_SESSION['user_id']);
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-item" href="../views/profile.php"><i class="fas fa-user-circle"></i> Hồ sơ</a></li>
-                                <li><a class="dropdown-item" href="../views/my_bookings.php"><i class="fas fa-calendar"></i> Đặt phòng của tôi</a></li>
+                                <li><a class="dropdown-item" href="/web-homestay-management/views/my_bookings.php"><i class="fas fa-calendar"></i> Đặt phòng của tôi</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="../handles/logout_process.php"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
                             </ul>
@@ -152,9 +152,11 @@ $logged = isset($_SESSION['id']) || isset($_SESSION['user_id']);
                         <a href="../views/login.php" class="btn btn-outline-custom btn-custom me-2">Đăng nhập</a>
                         <a href="../views/register.php" class="btn btn-primary-custom btn-custom">Đăng ký</a>
                     <?php endif; ?>
-                    <a href="#" class="btn btn-link position-relative ms-2">
-                        <i class="fas fa-shopping-cart fa-lg"></i>
-                        <span class="cart-badge">0</span>
+                    <a href="./views//favorites.php" class="btn btn-link position-relative me-3">
+                        <i class="fa-solid fa-heart" style="font-size:20px; color: #dc3545;"></i>
+                        <span class="cart-badge">
+                            <?php echo isset($_SESSION['favorites']) ? count($_SESSION['favorites']) : 0; ?>
+                        </span>
                     </a>
                 </div>
             </div>
@@ -397,7 +399,7 @@ $logged = isset($_SESSION['id']) || isset($_SESSION['user_id']);
                         </div>
 
                         <!-- Hidden inputs để gửi dữ liệu -->
-                        <input type="hidden" name="homestay_id" value="<?= $homestay['id'] ?>">
+                        <input type="hidden" name="homestay_id" value="<?= htmlspecialchars($homestay['id']) ?>">
                         <input type="hidden" name="homestay_name" value="<?= htmlspecialchars($homestay['homestay_name']) ?>">
                         <input type="hidden" name="price_per_night" value="<?= $homestay['price_per_night'] ?>">
                         <input type="hidden" name="guests" id="guestsInput" value="1">

@@ -116,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <i class="fas fa-envelope"></i> Tên đăng nhập
                                 </label>
                                 <input type="text" class="form-control" id="username" name="username" 
-                                       placeholder="Nhập tên đăng  của bạn" 
+                                       placeholder="Nhập tên đăng nhập của bạn" 
                                        value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>" required>
                                 <div class="invalid-feedback">
                                     Vui lòng nhập email hợp lệ!
@@ -147,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         Ghi nhớ đăng nhập
                                     </label>
                                 </div>
-                                <a href="forgot-password.php" class="text-decoration-none" style="color: var(--primary-color);">
+                                <a href="./forgot_password.php" class="text-decoration-none" style="color: var(--primary-color);">
                                     Quên mật khẩu?
                                 </a>
                             </div>

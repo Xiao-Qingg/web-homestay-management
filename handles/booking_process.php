@@ -13,9 +13,9 @@ switch ($action) {
     case 'create':
         handleCreateBooking();
         break;
-    case 'edit':
-        handleEditBooking();
-        break;
+    // case 'edit':
+    //     handleEditBooking();
+    //     break;
     case 'delete':
         handleDeleteBooking();
         break;
@@ -87,54 +87,54 @@ function handleCreateBooking() {
 
 /**
  * Xử lý chỉnh sửa booking
- */
-function handleEditBooking() {
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        header("Location: ../views/booking.php?error=Phương thức không hợp lệ");
-        exit();
-    }
+  */
+// function handleEditBooking() {
+//     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+//         header("Location: ../views/booking.php?error=Phương thức không hợp lệ");
+//         exit();
+//     }
 
-    if (
-        !isset($_POST['booking_id']) ||
-        !isset($_POST['homestay_detail_id']) ||
-        !isset($_POST['user_id']) ||
-        !isset($_POST['check_in']) ||
-        !isset($_POST['check_out']) ||
-        !isset($_POST['num_people']) ||
-        !isset($_POST['total_price']) ||
-        !isset($_POST['status'])
-    ) {
-        header("Location: ../views/booking/edit_booking.php?booking_id=" . ($_POST['booking_id'] ?? '') . "&error=Thiếu thông tin cần thiết");
-        exit();
-    }
+//     if (
+//         !isset($_POST['booking_id']) ||
+//         !isset($_POST['homestay_detail_id']) ||
+//         !isset($_POST['user_id']) ||
+//         !isset($_POST['check_in']) ||
+//         !isset($_POST['check_out']) ||
+//         !isset($_POST['num_people']) ||
+//         !isset($_POST['total_price']) ||
+//         !isset($_POST['status'])
+//     ) {
+//         header("Location: ../views/booking/edit_booking.php?booking_id=" . ($_POST['booking_id'] ?? '') . "&error=Thiếu thông tin cần thiết");
+//         exit();
+//     }
 
-    $booking_id = $_POST['booking_id'];
-    $homestay_detail_id = trim($_POST['homestay_detail_id']);
-    $user_id = trim($_POST['user_id']);
-    $check_in = trim($_POST['check_in']);
-    $check_out = trim($_POST['check_out']);
-    $num_people = trim($_POST['num_people']);
-    $total_price = trim($_POST['total_price']);
-    $status = trim($_POST['status']);
+//     $booking_id = $_POST['booking_id'];
+//     $homestay_detail_id = trim($_POST['homestay_detail_id']);
+//     $user_id = trim($_POST['user_id']);
+//     $check_in = trim($_POST['check_in']);
+//     $check_out = trim($_POST['check_out']);
+//     $num_people = trim($_POST['num_people']);
+//     $total_price = trim($_POST['total_price']);
+//     $status = trim($_POST['status']);
 
-    if (
-        empty($booking_id) || empty($homestay_detail_id) || empty($user_id) ||
-        empty($check_in) || empty($check_out) ||
-        empty($num_people) || empty($total_price) || empty($status)
-    ) {
-        header("Location: ../views/booking/edit_booking.php?booking_id=" . $booking_id . "&error=Vui lòng điền đầy đủ thông tin");
-        exit();
-    }
+//     if (
+//         empty($booking_id) || empty($homestay_detail_id) || empty($user_id) ||
+//         empty($check_in) || empty($check_out) ||
+//         empty($num_people) || empty($total_price) || empty($status)
+//     ) {
+//         header("Location: ../views/booking/edit_booking.php?booking_id=" . $booking_id . "&error=Vui lòng điền đầy đủ thông tin");
+//         exit();
+//     }
 
-    $result = updateBooking($booking_id, $homestay_detail_id, $user_id, $check_in, $check_out, $num_people, $total_price, $status);
+//     $result = updateBooking($booking_id, $homestay_detail_id, $user_id, $check_in, $check_out, $num_people, $total_price, $status);
 
-    if ($result) {
-        header("Location: ../views/booking.php?success=Cập nhật booking thành công");
-    } else {
-        header("Location: ../views/booking/edit_booking.php?booking_id=" . $booking_id . "&error=Cập nhật booking thất bại");
-    }
-    exit();
-}
+//     if ($result) {
+//         header("Location: ../views/booking.php?success=Cập nhật booking thành công");
+//     } else {
+//         header("Location: ../views/booking/edit_booking.php?booking_id=" . $booking_id . "&error=Cập nhật booking thất bại");
+//     }
+//     exit();
+// }
 
 /**
  * Xử lý xóa booking

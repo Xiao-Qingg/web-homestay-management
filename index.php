@@ -96,7 +96,7 @@ if (isset($_GET['rooms']) && !empty($_GET['rooms'])) {
     <?php if (isset($_SESSION['booking_success'])): ?>
          <script>
                 alert("<?= htmlspecialchars($_SESSION['booking_success']) ?>");
-            </script>
+        </script>
     <?php 
         unset($_SESSION['booking_success']); 
     endif; 
@@ -127,10 +127,10 @@ if (isset($_GET['rooms']) && !empty($_GET['rooms'])) {
                 </div>
                 <div class="col-md-4 text-end">
                     <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-tiktok"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="https://www.facebook.com/hong.trankhac.98"><i class="fab fa-facebook"></i></a>
+                        <a href="https://www.tiktok.com/@tkh021005"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://www.instagram.com/khac_hog02/"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.youtube.com/@tkhgaming6363"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
             </div>
@@ -177,15 +177,18 @@ if (isset($_GET['rooms']) && !empty($_GET['rooms'])) {
                                 <li><a class="dropdown-item" href="./handles/logout_process.php"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
                             </ul>
                         </div>
+                        <a href="./views//favorites.php" class="btn btn-link position-relative me-3">
+                        <i class="fa-solid fa-heart" style="font-size:20px; color: #dc3545;"></i>
+                        <span class="cart-badge">
+                            <?php echo isset($_SESSION['favorites']) ? count($_SESSION['favorites']) : 0; ?>
+                        </span>
+                    </a>
                     <?php else: ?>
                         <a href="views/login.php" class="btn btn-outline-custom btn-custom me-2">Đăng nhập</a>
                         <a href="views/register.php" class="btn btn-primary-custom btn-custom">Đăng ký</a>
                     <?php endif; ?>
 
-                    <a href="#" class="btn btn-link position-relative me-3">
-                        <i class="fas fa-shopping-cart fa-lg"></i>
-                        <span class="cart-badge">0</span>
-                    </a>
+                   
                 </div>
             </div>
         </div>
@@ -358,9 +361,14 @@ if (isset($_GET['rooms']) && !empty($_GET['rooms'])) {
                             <a href="./views/homestay_detail.php?id=<?php echo $homestay['id']; ?>" class="btn btn-primary-custom">
                                 <i class="fas fa-eye"></i> Xem chi tiết
                             </a>
-                            <a href="./views/addToCart.php?id=<?php echo $homestay['id']; ?>" class="btn btn-primary-custom">
-                                <i class="fas fa-shopping-cart fa-lg"></i> Thêm vào giỏ hàng
-                            </a>
+                            <?php
+                                $is_favorite = isset($_SESSION['favorites']) && in_array($homestay['id'], $_SESSION['favorites']);
+                                ?>
+                                <a href="./handles/add_to_wishlist.php?id=<?php echo $homestay['id']; ?>" 
+                                class="btn <?php echo $is_favorite ? 'btn-danger' : 'btn-outline-danger'; ?>">
+                                    <i class="fa-solid fa-heart"></i> 
+                                    <?php echo $is_favorite ? 'Đã yêu thích' : 'Thêm vào yêu thích'; ?>
+                                </a>
                         </div>
                     </div>
                 </div>

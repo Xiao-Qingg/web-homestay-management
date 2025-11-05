@@ -27,6 +27,7 @@ if ($id <= 0) {
 
 // Lấy danh sách booking của user
 $user = getUserById($id);
+$_SESSION['change_password_username'] = $user['username'];
 
 // Kiểm tra biến $logged từ auth_functions
 $logged = isset($_SESSION['id']) || isset($_SESSION['id']);
@@ -39,57 +40,95 @@ $logged = isset($_SESSION['id']) || isset($_SESSION['id']);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hồ sơ cá nhân</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css//profile.css">
 </head>
-<body class="bg-light">
 
-<div class="container mt-5">
-    <div class="card shadow-lg border-0 rounded-4">
-        <div class="card-header bg-primary text-white text-center py-3 rounded-top-4">
-            <h4 class="mb-0">Hồ sơ cá nhân</h4>
+<body>
+
+<div class="container profile-container">
+    <div class="profile-card">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <i class="fas fa-user-circle"></i>
+            </div>
+            <h4>Hồ sơ cá nhân</h4>
         </div>
-        <div class="card-body p-4">
-
+        
+        <div class="profile-body">
             <?php if (isset($_GET['success'])): ?>
-                <div class="alert alert-success"><?= htmlspecialchars($_GET['success']) ?></div>
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i>
+                    <span><?= htmlspecialchars($_GET['success']) ?></span>
+                </div>
             <?php elseif (isset($_GET['error'])): ?>
-                <div class="alert alert-danger"><?= htmlspecialchars($_GET['error']) ?></div>
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span><?= htmlspecialchars($_GET['error']) ?></span>
+                </div>
             <?php endif; ?>
 
             <form method="POST" action="../handles/profile_process.php">
-               <div class="mb-3">
-                    <label class="form-label fw-semibold">Tên tài khoản</label>
-                    <input type="email" class="form-control" 
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-envelope"></i>
+                        Tên tài khoản
+                    </label>
+                    <input type="text" class="form-control" 
                            value="<?= htmlspecialchars($user['username']) ?>" disabled>
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Họ và tên</label>
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-user"></i>
+                        Họ và tên
+                    </label>
                     <input type="text" name="fullname" class="form-control" 
                            value="<?= htmlspecialchars($user['fullname']) ?>" required>
                 </div>
 
-
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Số điện thoại</label>
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-phone"></i>
+                        Số điện thoại
+                    </label>
                     <input type="text" name="phone" class="form-control" 
-                           value="<?= htmlspecialchars($user['phone']) ?>">
+                           value="<?= htmlspecialchars($user['phone']) ?>"
+                           placeholder="Nhập số điện thoại">
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Địa chỉ</label>
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Địa chỉ
+                    </label>
                     <input type="text" name="address" class="form-control" 
-                           value="<?= htmlspecialchars($user['address']) ?>">
+                           value="<?= htmlspecialchars($user['address']) ?>"
+                           placeholder="Nhập địa chỉ">
                 </div>
 
+                <div class="btn-group-custom">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i>
+                        Lưu thay đổi
+                    </button>
+                    <a href="./change_password.php" class="btn" style="background-color:darkcyan; color:white;">
+                        <i class="fas fa-key"></i>
+                        Đổi mật khẩu
+                    </a>
 
-                <div class="text-center">
-                    <button type="submit" class="btn btn-success px-4">Lưu thay đổi</button>
-                    <a href="../index.php" class="btn btn-secondary px-4">Quay lại</a>
+
+                    <a href="../index.php" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i>
+                        Quay lại
+                    </a>
+                 
                 </div>
             </form>
         </div>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

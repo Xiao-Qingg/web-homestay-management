@@ -29,7 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 // ===== THAY ĐỔI TỪ ĐÂY =====
 // Lấy thông tin từ POST thay vì GET
 $user_id = (int)($_POST['user_id'] ?? 0);
-$homestay_id = (int)($_POST['homestay_id'] ?? 0);
+$homestay_id = $_POST['homestay_id'] ?? $_GET['id'] ?? 0;
+
 $checkin = $_POST['checkin'] ?? date('Y-m-d');
 $checkout = $_POST['checkout'] ?? date('Y-m-d', strtotime('+1 days'));
 $guests = (int)($_POST['guests'] ?? 1);
@@ -90,7 +91,7 @@ $subtotal = $total;
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <link rel="stylesheet" href="../css/booking.css">
+    <link rel="stylesheet" href="/web-homestay-management/css/booking.css">
 </head>
 <body>
     <div class="booking-container">
@@ -104,14 +105,14 @@ $subtotal = $total;
             <div class="card">
                 <h2><i class="fas fa-edit"></i> Thông tin đặt phòng</h2>
                 
-                <form action="../handles/booking_process.php?action=create" method="POST" id="bookingForm">
+                <form action="/web-homestay-management/handles/booking_process.php?action=create" method="POST" id="bookingForm">
                     <input type="hidden" name="user_id" value="<?= $user_id ?>">
-                    <input type="hidden" name="homestay_id" value="<?= $homestay_id ?>">
-                    <input type="hidden" name="price_per_night" value="<?= $price_per_night ?>">
+                    <input type="hidden" id="homestay_id" name="homestay_id" value="<?php echo $homestay_id; ?>">
+
+
+                    <input type="hidden" name="price_per_night" value="<?= $price_per_night ?>">    
                     <input type="hidden" name="nights" value="<?= $nights ?>">
                     <input type="hidden" name="subtotal" value="<?= $subtotal ?>">
-                    <input type="hidden" name="service_fee" value="<?= $service_fee ?>">
-                    <input type="hidden" name="cleaning_fee" value="<?= $cleaning_fee ?>">
                     <input type="hidden" name="total" value="<?= $total ?>">
                     
                     <div class="row">

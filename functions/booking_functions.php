@@ -26,8 +26,7 @@ function getAllBookings() {
             b.address
         FROM bookings b
         JOIN users u ON b.user_id = u.id
-        JOIN homestay_details hd ON b.homestay_detail_id = hd.id
-        JOIN homestays h ON hd.homestay_id = h.id
+        JOIN homestays h ON b.homestay_id = h.id
         ORDER BY b.created_at DESC
     ";
 
@@ -55,17 +54,17 @@ function getAllBookings() {
  * @param string $status
  * @return bool True nếu thành công, False nếu thất bại
  */
-function addBooking($homestay_detail_id, $user_id, $check_in, $check_out, $num_people, $total_price, $status, $fullname, $phone, $address) {
+function addBooking($homestay_id, $user_id, $check_in, $check_out, $num_people, $total_price, $status, $fullname, $phone, $address) {
     $conn = getDbConnection();
 
     $sql = "
-        INSERT INTO bookings (homestay_detail_id, user_id, check_in, check_out, num_people, total_price, status, fullname, phone, address)
+        INSERT INTO bookings (homestay_id, user_id, check_in, check_out, num_people, total_price, status, fullname, phone, address)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ";
     $stmt = mysqli_prepare($conn, $sql);
 
     if ($stmt) {
-        mysqli_stmt_bind_param($stmt, "iissidssss", $homestay_detail_id, $user_id, $check_in, $check_out, $num_people, $total_price, $status, $fullname, $phone, $address);
+        mysqli_stmt_bind_param($stmt, "iissidssss", $homestay_id, $user_id, $check_in, $check_out, $num_people, $total_price, $status, $fullname, $phone, $address);
         $success = mysqli_stmt_execute($stmt);
 
         mysqli_stmt_close($stmt);
@@ -86,23 +85,23 @@ function getBookingsByUserId($user_id) {
     $conn = getDbConnection();
 
     $sql = "
-        SELECT 
+       SELECT 
             b.booking_id,
-            b.homestay_detail_id,
+            h.homestay_name AS homestay_name,
+            h.location,
+            h.price_per_night,
+            h.image_url,
             b.check_in,
             b.check_out,
             b.num_people,
             b.total_price,
             b.status,
             b.created_at,
-            h.id AS homestay_id,
-            h.homestay_name,          
-            b.address,
-            h.location,
-            h.image_url        
+            b.fullname,
+            b.phone,
+            b.address
         FROM bookings b
-        JOIN homestay_details hd ON b.homestay_detail_id = hd.id
-        JOIN homestays h ON hd.homestay_id = h.id
+        JOIN homestays h ON b.homestay_id = h.id
         WHERE b.user_id = ?
         ORDER BY b.created_at DESC
     ";

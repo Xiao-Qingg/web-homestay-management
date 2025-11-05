@@ -24,13 +24,8 @@ include './menu.php';
 <body>
 <main class="main-content" style="margin-left: 260px; padding-left: 20px;">
     <div class="header d-flex justify-content-between align-items-center mb-3">
-        <h1>Quản lý Booking</h1>
-        <div class="user-info">
-            <span><?= htmlspecialchars($_SESSION['fullname'] ?? $_SESSION['username'] ?? 'Admin User') ?></span>
-            <a href="../../handles/logout_process.php" class="btn btn-outline-secondary btn-sm ms-2">
-                <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
-            </a>
-        </div>
+        <h1><i class="fas fa-calendar-check"></i> Quản lý Booking</h1>
+       
     </div>
 
     <div class="content-card">

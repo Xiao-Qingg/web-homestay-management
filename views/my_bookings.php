@@ -44,49 +44,9 @@ $logged = isset($_SESSION['user_id']) || isset($_SESSION['id']);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- CSS riêng -->
+    <link rel="stylesheet" href="../css/my_booking.css">
     <link rel="stylesheet" href="../css/homestay_detail.css">
     
-    <style>
-        .booking-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            height: 100%;
-        }
-        
-        .booking-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-        }
-        
-        .booking-card .card-img-top {
-            height: 200px;
-            object-fit: cover;
-        }
-        
-        .status-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: bold;
-        }
-        
-        .status-confirmed {
-            background-color: #28a745;
-            color: white;
-        }
-        
-        .status-pending {
-            background-color: #ffc107;
-            color: #000;
-        }
-        
-        .status-cancelled {
-            background-color: #dc3545;
-            color: white;
-        }
-    </style>
 </head>
 <body>
 
@@ -153,9 +113,11 @@ $logged = isset($_SESSION['user_id']) || isset($_SESSION['id']);
                         <a href="../views/login.php" class="btn btn-outline-custom btn-custom me-2">Đăng nhập</a>
                         <a href="../views/register.php" class="btn btn-primary-custom btn-custom">Đăng ký</a>
                     <?php endif; ?>
-                    <a href="#" class="btn btn-link position-relative ms-2">
-                        <i class="fas fa-shopping-cart fa-lg"></i>
-                        <span class="cart-badge">0</span>
+                    <a href="./views//favorites.php" class="btn btn-link position-relative me-3">
+                        <i class="fa-solid fa-heart" style="font-size:20px; color: #dc3545;"></i>
+                        <span class="cart-badge">
+                            <?php echo isset($_SESSION['favorites']) ? count($_SESSION['favorites']) : 0; ?>
+                        </span>
                     </a>
                 </div>
             </div>

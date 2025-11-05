@@ -12,6 +12,8 @@ $current_page = $current_page ?? 'dashboard';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Homestay Paradise</title>
+   
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../css/dashboard.css">
 </head>
@@ -21,15 +23,15 @@ $current_page = $current_page ?? 'dashboard';
         <h2>Homestay Paradise</h2>
         <small>Admin Panel</small>
     </div>
-    <ul class="sidebar-menu">
+    <ul style="padding-left:0 !important;" class="sidebar-menu">
         <li>
             <a href="dashboard.php" class="<?= ($current_page === 'dashboard') ? 'active' : ''; ?>">
                 <span><i class="fa-solid fa-square-poll-vertical"></i></span> Dashboard
             </a>
         </li>
         <li>
-            <a href="./homestay.php" class="<?= ($current_page === 'homestays') ? 'active' : ''; ?>">
-                <span><i class="fa-solid fa-house-chimney"></i></span> Quản lý Homestay
+            <a href="homestay.php" class="menu-item <?= ($current_page == 'homestays') ? 'active' : '' ?>">
+                <span><i class="fa-solid fa-house"></i></span> Quản lý Homestay
             </a>
         </li>
         <li>

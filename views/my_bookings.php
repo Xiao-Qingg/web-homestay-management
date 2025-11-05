@@ -113,7 +113,7 @@ $logged = isset($_SESSION['user_id']) || isset($_SESSION['id']);
                         <a href="../views/login.php" class="btn btn-outline-custom btn-custom me-2">Đăng nhập</a>
                         <a href="../views/register.php" class="btn btn-primary-custom btn-custom">Đăng ký</a>
                     <?php endif; ?>
-                    <a href="./views//favorites.php" class="btn btn-link position-relative me-3">
+                    <a href="./favorites.php" class="btn btn-link position-relative me-3">
                         <i class="fa-solid fa-heart" style="font-size:20px; color: #dc3545;"></i>
                         <span class="cart-badge">
                             <?php echo isset($_SESSION['favorites']) ? count($_SESSION['favorites']) : 0; ?>
@@ -194,7 +194,8 @@ $logged = isset($_SESSION['user_id']) || isset($_SESSION['id']);
                                     } elseif (stripos($status, 'hủy') !== false || stripos($status, 'cancel') !== false) {
                                         $statusClass = 'status-cancelled';
                                         $statusText = 'Đã hủy';
-                                    } else {
+                                    }
+                                     else {
                                         $statusText = $status;
                                     }
                                 ?>

@@ -16,6 +16,10 @@ include './menu.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- <link rel="stylesheet" href="../../css/dashboard.css"> -->
+    
 </head>
 <body>
     <main class="main-content" style="margin-left: 260px; padding-left: 20px;">
@@ -74,7 +78,7 @@ include './menu.php';
                                 $status = $h['status'] ?? '';
                                 $badgeClass = ($status === 'Hoạt động') ? 'bg-success' : 'bg-secondary';
                                 ?>
-                                <span class="badge <?= $badgeClass ?>">
+                                <span style="color:white;" class="badge <?= $badgeClass ?>">
                                     <?= htmlspecialchars($status) ?>
                                 </span>
                             </td>

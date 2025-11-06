@@ -19,9 +19,9 @@ include './menu.php';
     <meta charset="UTF-8">
     <title>Quản lý Booking</title>
     <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet"> -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../css/dashboard.css">
 </head>
 <body>
 <main class="main-content" style="margin-left: 260px; padding-left: 20px;">
@@ -97,37 +97,8 @@ include './menu.php';
 </main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-<script>
-document.querySelectorAll('.status-select').forEach(select => {
-    select.addEventListener('change', async function() {
-        const bookingId = this.dataset.bookingId;
-        const newStatus = this.value;
+<script src="../../assets/js/booking.js">
 
-        try {
-            const res = await fetch('../../handles/booking_process.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({
-                    action: 'update_status',
-                    booking_id: bookingId,
-                    status: newStatus
-                })
-            });
-
-            const result = await res.text();
-            console.log(result);
-
-            if (res.ok) {
-                alert("Cập nhật trạng thái thành công!");
-            } else {
-                alert("Có lỗi khi cập nhật trạng thái!");
-            }
-        } catch (err) {
-            console.error(err);
-            alert("Lỗi kết nối đến server!");
-        }
-    });
-});
 </script>
 
 </body>

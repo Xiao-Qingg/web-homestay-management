@@ -91,7 +91,7 @@ $subtotal = $total;
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <link rel="stylesheet" href="/web-homestay-management/css/booking.css">
+    <link rel="stylesheet" href="/web-homestay-management/assets/css/booking.css">
 </head>
 <body>
     <div class="booking-container">
@@ -255,7 +255,6 @@ $subtotal = $total;
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
-        // GIỮ NGUYÊN JAVASCRIPT CŨ
         const pricePerNight = <?= $price_per_night ?>;
         const cleaningFee = <?= $cleaning_fee ?>;
 
@@ -269,35 +268,8 @@ $subtotal = $total;
             });
         });
 
-        function recalculate() {
-            const checkin = new Date(document.getElementById('checkinInput').value);
-            const checkout = new Date(document.getElementById('checkoutInput').value);
-            const nights = Math.ceil((checkout - checkin) / (1000 * 60 * 60 * 24));
-            
-            if (nights > 0) {
-                const subtotal = pricePerNight * nights;
-              
-                
-                document.getElementById('nightsDisplay').textContent = `${nights} đêm`;
-                document.getElementById('nightsCalc').textContent = nights;
-                document.getElementById('total').textContent = `${total.toLocaleString()}đ`;
-          
-                
-                document.querySelector('input[name="nights"]').value = nights;
-                document.querySelector('input[name="total"]').value = total;
-            }
-        }
-
-        document.getElementById('checkinInput').addEventListener('change', recalculate);
-        document.getElementById('checkoutInput').addEventListener('change', recalculate);
-
-        document.getElementById('bookingForm').addEventListener('submit', function(e) {
-            if (!document.getElementById('terms').checked) {
-                e.preventDefault();
-                alert('Vui lòng đồng ý với điều khoản dịch vụ!');
-                return false;
-            }
-        });
+        
     </script>
+    <script src="../assets/js/booking.js"></script>
 </body>
 </html>

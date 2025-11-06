@@ -24,11 +24,6 @@ $homestays = getAllHomestays();
 // Chuyển đổi dữ liệu từ database sang format phù hợp
 $formatted_homestays = [];
 foreach ($homestays as $homestay) {
-    // $amenities = [];
-    // if (!empty($homestay['amenities'])) {
-    //     $amenities = array_map('trim', explode(',', $homestay['amenities']));
-    // }
-
     $formatted_homestays[] = [
         'id' => $homestay['id'],
         'name' => $homestay['homestay_name'],
@@ -42,7 +37,6 @@ foreach ($homestays as $homestay) {
     ];
 }
 
-// Xử lý tìm kiếm
 $search_results = $formatted_homestays;
 $search_query = '';
 
@@ -70,10 +64,6 @@ if (isset($_GET['rooms']) && !empty($_GET['rooms'])) {
     });
 }
 
-// //Xử lý lọc theo trạng thái (chỉ hiển thị homestay đang active)
-// $search_results = array_filter($search_results, function($homestay) {
-//     return strtolower($homestay['status']) === 'active' || strtolower($homestay['status']) === 'available';
-// });
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -89,7 +79,7 @@ if (isset($_GET['rooms']) && !empty($_GET['rooms'])) {
     <!-- Animate CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
         <!-- Thông báo thành công -->
@@ -113,117 +103,7 @@ if (isset($_GET['rooms']) && !empty($_GET['rooms'])) {
     </div>
     <?php endif; ?>
     <!-- Top Bar -->
-    <div class="top-bar">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-4">
-                    <span><i class="fas fa-phone"></i> 0123-456-789</span>
-                    <span class="ms-3"><i class="fas fa-envelope"></i> group22@homestay.vn</span>
-                </div>
-                <div class="col-md-4 text-center">
-                    <span class="discount-badge">
-                        <i class="fas fa-gift"></i> Giảm giá 30% cho booking đầu tiên!
-                    </span>
-                </div>
-                <div class="col-md-4 text-end">
-                    <div class="social-links">
-                        <a href="https://www.facebook.com/hong.trankhac.98"><i class="fab fa-facebook"></i></a>
-                        <a href="https://www.tiktok.com/@tkh021005"><i class="fab fa-tiktok"></i></a>
-                        <a href="https://www.instagram.com/khac_hog02/"><i class="fab fa-instagram"></i></a>
-                        <a href="https://www.youtube.com/@tkhgaming6363"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Header -->
-    <header>
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-3">
-                    <a href="index.php" class="logo" style="font-size:26px ">
-                        <i class="fas fa-home"></i> Group 22 
-                    </a>
-                </div>
-                <div class="col-md-5">
-                    <form action="index.php" method="GET" id="searchForm">
-                        <div class="input-group">
-                            <input type="text" class="form-control" name="search" 
-                                   placeholder="Tìm kiếm homestay theo tên hoặc địa điểm..." 
-                                   value="<?php echo htmlspecialchars($search_query); ?>">
-                            <button class="btn btn-primary-custom" type="submit">
-                                <i class="fas fa-search"></i> Tìm kiếm
-                            </button>
-                        </div>
-                    </form>
-                </div>
-                
-                <?php
-                if (session_status() === PHP_SESSION_NONE) session_start();
-                $logged = isset($_SESSION['id']) || isset($_SESSION['user_id']);
-                ?>
-                <div class="col-md-4 text-end">
-                    <?php if ($logged): ?>
-                        <?php $fullname = $_SESSION['fullname'] ?? $_SESSION['username'] ?? 'Người dùng'; ?>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-outline-custom dropdown-toggle" data-bs-toggle="dropdown">
-                                <i class="fas fa-user"></i> Hi, <?= htmlspecialchars($fullname) ?>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="./views/profile.php"><i class="fas fa-user-circle"></i> Hồ sơ</a></li>
-                                <li><a class="dropdown-item" href="./views/my_bookings.php"><i class="fas fa-calendar"></i> Đặt phòng của tôi</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="./handles/logout_process.php"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
-                            </ul>
-                        </div>
-                        <a href="./views//favorites.php" class="btn btn-link position-relative me-3">
-                        <i class="fa-solid fa-heart" style="font-size:20px; color: #dc3545;"></i>
-                        <span class="cart-badge">
-                            <?php echo isset($_SESSION['favorites']) ? count($_SESSION['favorites']) : 0; ?>
-                        </span>
-                    </a>
-                    <?php else: ?>
-                        <a href="views/login.php" class="btn btn-outline-custom btn-custom me-2">Đăng nhập</a>
-                        <a href="views/register.php" class="btn btn-primary-custom btn-custom">Đăng ký</a>
-                    <?php endif; ?>
-
-                   
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.php"><i class="fas fa-home"></i> Trang chủ</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fas fa-building"></i> Homestay</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fas fa-map-marked-alt"></i> Điểm đến</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fas fa-percent"></i> Ưu đãi</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fas fa-newspaper"></i> Tin tức</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fas fa-phone-alt"></i> Liên hệ</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <?php include './views/header.php'?>
 
     <!-- Carousel -->
     <div id="carouselHomestay" class="carousel slide" data-bs-ride="carousel">
@@ -390,67 +270,14 @@ if (isset($_GET['rooms']) && !empty($_GET['rooms'])) {
     </section>
 
     <!-- Footer -->
-    <footer class="bg-dark text-white pt-5 pb-3">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <h5><i class="fas fa-info-circle"></i> Về Chúng Tôi</h5>
-                    <p>Homestay Paradise - Nền tảng đặt phòng homestay hàng đầu Việt Nam. Mang đến trải nghiệm lưu trú tuyệt vời.</p>
-                    <div class="social-links mt-3">
-                        <a href="#" class="text-white me-3"><i class="fab fa-facebook fa-lg"></i></a>
-                        <a href="#" class="text-white me-3"><i class="fab fa-tiktok fa-lg"></i></a>
-                        <a href="#" class="text-white me-3"><i class="fab fa-instagram fa-lg"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-youtube fa-lg"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <h5><i class="fas fa-link"></i> Liên Kết</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="text-white-50">Về chúng tôi</a></li>
-                        <li><a href="#" class="text-white-50">Điều khoản sử dụng</a></li>
-                        <li><a href="#" class="text-white-50">Chính sách bảo mật</a></li>
-                        <li><a href="#" class="text-white-50">Hỗ trợ khách hàng</a></li>
-                        <li><a href="#" class="text-white-50">Câu hỏi thường gặp</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <h5><i class="fas fa-concierge-bell"></i> Dịch Vụ</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="text-white-50">Đặt phòng homestay</a></li>
-                        <li><a href="#" class="text-white-50">Tour du lịch</a></li>
-                        <li><a href="#" class="text-white-50">Cho thuê xe</a></li>
-                        <li><a href="#" class="text-white-50">Hướng dẫn viên</a></li>
-                        <li><a href="#" class="text-white-50">Ưu đãi đặc biệt</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <h5><i class="fas fa-phone-alt"></i> Liên Hệ</h5>
-                    <ul class="list-unstyled text-white-50">
-                        <li><i class="fas fa-map-marker-alt"></i> 123 Đường ABC, Quận 1, TP.HCM</li>
-                        <li><i class="fas fa-phone"></i> 0123-456-789</li>
-                        <li><i class="fas fa-envelope"></i> info@homestay.vn</li>
-                        <li><i class="fas fa-clock"></i> 24/7 hỗ trợ</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="text-center pt-3 mt-3 border-top border-secondary">
-                <p class="mb-0">&copy; 2025 Homestay Paradise. All rights reserved. Designed with <i class="fas fa-heart text-danger"></i></p>
-            </div>
-        </div>
-    </footer>
+    <?php
+        include './views/footer.php'
+    ?>
 
     <!-- Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     
     <script>
-    //      setTimeout(function() {
-    //     const alerts = document.querySelectorAll('.alert');
-    //     alerts.forEach(function(alert) {
-    //         const bsAlert = new bootstrap.Alert(alert);
-    //         bsAlert.close();
-    //     });
-    // }, 5000);
-        // Smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -463,11 +290,6 @@ if (isset($_GET['rooms']) && !empty($_GET['rooms'])) {
             });
         });
 
-        // Add to cart notification
-        function addToCart(id) {
-            alert('Homestay đã được thêm vào giỏ hàng! ID: ' + id);
-            // Có thể thêm logic AJAX để thêm vào giỏ hàng thực tế
-        }
     </script>
 </body>
 </html>

@@ -18,8 +18,8 @@ include './menu.php';
     <title>Document</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- <link rel="stylesheet" href="../../css/dashboard.css"> -->
-    
+    <link rel="stylesheet" href="../../css/dashboard.css">
+  
 </head>
 <body>
     <main class="main-content" style="margin-left: 260px; padding-left: 20px;">

@@ -53,7 +53,7 @@ $logged = isset($_SESSION['id']) || isset($_SESSION['user_id']);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- CSS riêng cho detail -->
-   <link rel="stylesheet" href="/web-homestay-management/css/homestay_detail.css">
+   <link rel="stylesheet" href="/web-homestay-management/assets/css/homestay_detail.css">
 </head>
 <body>
     <style>
@@ -90,109 +90,7 @@ $logged = isset($_SESSION['id']) || isset($_SESSION['user_id']);
 
     </style>
     <!-- Top Bar giống Index -->
-    <div class="top-bar" >
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-4">
-                    <span><i class="fas fa-phone"></i> 0123-456-789</span>
-                    <span class="ms-3"><i class="fas fa-envelope"></i> group22@homestay.vn</span>
-                </div>
-                <div class="col-md-4 text-center">
-                    <span class="discount-badge">
-                        <i class="fas fa-gift"></i> Giảm giá 30% cho booking đầu tiên!
-                    </span>
-                </div>
-                <div class="col-md-4 text-end">
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-tiktok"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Header giống Index -->
-    <header>
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-3">
-                    <a href="/web-homestay-management/index.php" class="logo">
-                        <i class="fas fa-home"></i> Group 22
-                    </a>
-                </div>
-                <div class="col-md-5">
-                    <form action="../index.php" method="GET" id="searchForm">
-                        <div class="input-group">
-                            <input type="text" class="form-control" name="search" 
-                                   placeholder="Tìm kiếm homestay theo tên hoặc địa điểm...">
-                            <button class="btn btn-primary-custom" type="submit">
-                                <i class="fas fa-search"></i> Tìm kiếm
-                            </button>
-                        </div>
-                    </form>
-                </div>
-                <div class="col-md-4 text-end">
-                    <?php if ($logged): ?>
-                        <?php $fullname = $_SESSION['fullname'] ?? $_SESSION['username'] ?? 'Người dùng'; ?>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-outline-custom dropdown-toggle" data-bs-toggle="dropdown">
-                                <i class="fas fa-user"></i> Hi, <?= htmlspecialchars($fullname) ?>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="../views/profile.php"><i class="fas fa-user-circle"></i> Hồ sơ</a></li>
-                                <li><a class="dropdown-item" href="/web-homestay-management/views/my_bookings.php"><i class="fas fa-calendar"></i> Đặt phòng của tôi</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="../handles/logout_process.php"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
-                            </ul>
-                        </div>
-                    <?php else: ?>
-                        <a href="../views/login.php" class="btn btn-outline-custom btn-custom me-2">Đăng nhập</a>
-                        <a href="../views/register.php" class="btn btn-primary-custom btn-custom">Đăng ký</a>
-                    <?php endif; ?>
-                    <a href="./views//favorites.php" class="btn btn-link position-relative me-3">
-                        <i class="fa-solid fa-heart" style="font-size:20px; color: #dc3545;"></i>
-                        <span class="cart-badge">
-                            <?php echo isset($_SESSION['favorites']) ? count($_SESSION['favorites']) : 0; ?>
-                        </span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Navigation giống Index -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="../index.php"><i class="fas fa-home"></i> Trang chủ</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../index.php#homestays"><i class="fas fa-building"></i> Homestay</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fas fa-map-marked-alt"></i> Điểm đến</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fas fa-percent"></i> Ưu đãi</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fas fa-newspaper"></i> Tin tức</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fas fa-phone-alt"></i> Liên hệ</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <?php include '../views/header.php'?>
 
     <!-- Main Container -->
     <div class="container" style="margin-top: 30px;">
@@ -434,124 +332,25 @@ $logged = isset($_SESSION['id']) || isset($_SESSION['user_id']);
     </div>
 
     <!-- Footer -->
-    <footer class="bg-dark text-white pt-5 pb-3 mt-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <h5><i class="fas fa-info-circle"></i> Về Chúng Tôi</h5>
-                    <p>Homestay Paradise - Nền tảng đặt phòng homestay hàng đầu Việt Nam.</p>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <h5><i class="fas fa-link"></i> Liên Kết</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="text-white-50">Về chúng tôi</a></li>
-                        <li><a href="#" class="text-white-50">Điều khoản sử dụng</a></li>
-                        <li><a href="#" class="text-white-50">Chính sách bảo mật</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <h5><i class="fas fa-concierge-bell"></i> Dịch Vụ</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="text-white-50">Đặt phòng homestay</a></li>
-                        <li><a href="#" class="text-white-50">Hỗ trợ khách hàng</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <h5><i class="fas fa-phone-alt"></i> Liên Hệ</h5>
-                    <ul class="list-unstyled text-white-50">
-                        <li><i class="fas fa-phone"></i> 0123-456-789</li>
-                        <li><i class="fas fa-envelope"></i> info@homestay.vn</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="text-center pt-3 mt-3 border-top border-secondary">
-                <p class="mb-0">&copy; 2025 Homestay Paradise. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+   <?php
+        include '../views/footer.php'
+    ?>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-   <script>
-let guestCount = 1;
-const pricePerNight = <?= $homestay['price_per_night'] ?>;
-const maxGuests = <?= $homestay['max_guests'] ?? 10 ?>;
+   <script src="../assets/js/homestay_detail.js">
+    let guestCount = 1;
+    const pricePerNight = <?= $homestay['price_per_night'] ?>;
+    const maxGuests = <?= $homestay['max_guests'] ?? 10 ?>;
 
-// Thay đổi số khách
-function changeGuests(delta) {
-    const newCount = guestCount + delta;
-    if (newCount >= 1 && newCount <= maxGuests) {
-        guestCount = newCount;
-        document.getElementById('guestCount').textContent = guestCount;
-        document.getElementById('guestsInput').value = guestCount;
+    // Thay đổi số khách
+    function changeGuests(delta) {
+        const newCount = guestCount + delta;
+        if (newCount >= 1 && newCount <= maxGuests) {
+            guestCount = newCount;
+            document.getElementById('guestCount').textContent = guestCount;
+            document.getElementById('guestsInput').value = guestCount;
+        }
     }
-}
-
-// Tính số đêm
-function calculateNights() {
-    const checkinDate = new Date(document.getElementById('checkin').value);
-    const checkoutDate = new Date(document.getElementById('checkout').value);
-    const timeDiff = checkoutDate - checkinDate;
-    const nights = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-    return nights > 0 ? nights : 1;
-}
-
-// Cập nhật giá
-function updatePrice() {
-    const nights = calculateNights();
-    const subtotal = pricePerNight * nights;
-    const serviceFee = subtotal * 0.1;
-    const total = subtotal + serviceFee;
-
-    // Cập nhật hiển thị
-    document.getElementById('priceCalc').textContent = `${pricePerNight.toLocaleString('vi-VN')}đ x ${nights} đêm`;
-    document.getElementById('subtotal').textContent = `${subtotal.toLocaleString('vi-VN')}đ`;
-    document.getElementById('serviceFee').textContent = `${serviceFee.toLocaleString('vi-VN')}đ`;
-    document.getElementById('totalPrice').textContent = `${total.toLocaleString('vi-VN')}đ`;
-
-    // Cập nhật hidden inputs
-    document.getElementById('nightsInput').value = nights;
-    document.getElementById('subtotalInput').value = subtotal;
-    document.getElementById('serviceFeeInput').value = serviceFee;
-    document.getElementById('totalInput').value = total;
-}
-
-// Xác thực ngày trước khi submit
-document.getElementById('bookingForm').addEventListener('submit', function(e) {
-    const checkin = new Date(document.getElementById('checkin').value);
-    const checkout = new Date(document.getElementById('checkout').value);
-    
-    if (checkout <= checkin) {
-        e.preventDefault();
-        alert('Ngày trả phòng phải sau ngày nhận phòng!');
-        return false;
-    }
-    
-    const nights = calculateNights();
-    if (nights < 1) {
-        e.preventDefault();
-        alert('Vui lòng chọn ngày hợp lệ!');
-        return false;
-    }
-});
-
-// Cập nhật giá khi thay đổi ngày
-document.getElementById('checkin').addEventListener('change', function() {
-    const checkin = new Date(this.value);
-    const checkout = document.getElementById('checkout');
-    const minCheckout = new Date(checkin);
-    minCheckout.setDate(minCheckout.getDate() + 1);
-    checkout.min = minCheckout.toISOString().split('T')[0];
-    
-    if (new Date(checkout.value) <= checkin) {
-        checkout.value = minCheckout.toISOString().split('T')[0];
-    }
-    updatePrice();
-});
-
-document.getElementById('checkout').addEventListener('change', updatePrice);
-
-// Khởi tạo giá ban đầu
-updatePrice();
-</script>   
+   </script>   
 </body>
 </html>

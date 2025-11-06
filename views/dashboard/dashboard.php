@@ -59,10 +59,8 @@ foreach ($bookings as $booking) {
         $booking_status['pending']++;
     }
 }
-
 // Tính tỷ lệ lấp đầy (giả sử mỗi homestay có 30 ngày/tháng)
 $occupancy_rate = $total_homestays > 0 ? round(($total_bookings / ($total_homestays * 30)) * 100, 1) : 0;
-
 // Lấy booking gần nhất
 $recent_bookings = array_slice(array_reverse($bookings), 0, 5);
 

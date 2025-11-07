@@ -2,15 +2,11 @@
 session_start();
 require_once __DIR__ . '/../../functions/auth_functions.php';
 
-
 checkLogin('../../views/login.php');
 $current_page = 'bookings';
 $page_title = 'Quản lý Booking';
 
 include './menu.php';
-
-// Kết nối CSDL
-
 ?>
 
 <!DOCTYPE html>
@@ -18,7 +14,6 @@ include './menu.php';
 <head>
     <meta charset="UTF-8">
     <title>Quản lý Booking</title>
-    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet"> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../css/dashboard.css">
@@ -27,14 +22,13 @@ include './menu.php';
 <main class="main-content" style="margin-left: 260px; padding-left: 20px;">
     <div class="header d-flex justify-content-between align-items-center mb-3">
         <h1><i class="fas fa-calendar-check"></i> Quản lý Booking</h1>
-       
     </div>
 
     <div class="content-card">
         <div class="table-responsive">
             <table class="table table-striped table-bordered mt-3">
                 <thead class="table-dark">
-                    <tr>
+                    <tr >
                         <th>STT</th>
                         <th>Họ tên</th>
                         <th>Số điện thoại</th>
@@ -43,6 +37,8 @@ include './menu.php';
                         <th>Số người</th>
                         <th>Check-in</th>
                         <th>Check-out</th>
+                         <th>Tổng tiền</th>
+                        <th>Phương thức</th>
                         <th>Trạng thái</th>
                         <th>Thao tác</th>
                     </tr>
@@ -67,6 +63,8 @@ include './menu.php';
                                 <td><?= htmlspecialchars($b['num_people']) ?></td>
                                 <td><?= htmlspecialchars($b['check_in']) ?></td>
                                 <td><?= htmlspecialchars($b['check_out']) ?></td>
+                                <td><?= htmlspecialchars($b['total_price']) ?></td>
+                                <td><?= htmlspecialchars($b['payment']) ?></td>
                                <td>
                                     <select style="width:120px; height:30px;" class="form-select form-select-sm status-select" 
                                             data-booking-id="<?= $b['booking_id'] ?>">
@@ -97,8 +95,49 @@ include './menu.php';
 </main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-<script src="../../assets/js/booking.js">
 
+<script>
+// Chạy sau khi DOM đã load xong
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.status-select').forEach(select => {
+        select.addEventListener('change', async function() {
+            const bookingId = this.dataset.bookingId;
+            const newStatus = this.value;
+            const originalStatus = this.querySelector('option[selected]')?.value || this.value;
+
+            try {
+                const res = await fetch('../../handles/booking_process.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        action: 'update_status',
+                        booking_id: bookingId,
+                        status: newStatus
+                    })
+                });
+
+                const result = await res.text();
+                console.log('Response:', result);
+
+                if (result.trim() === 'success') {
+                    alert('Cập nhật trạng thái thành công!');
+                    // Cập nhật selected attribute
+                    this.querySelectorAll('option').forEach(opt => {
+                        opt.removeAttribute('selected');
+                    });
+                    this.querySelector(`option[value="${newStatus}"]`).setAttribute('selected', 'selected');
+                } else {
+                    alert('Có lỗi khi cập nhật trạng thái!');
+                    this.value = originalStatus; // Khôi phục giá trị cũ
+                }
+            } catch (err) {
+                console.error('Error:', err);
+                alert('Lỗi kết nối đến server!');
+                this.value = originalStatus; // Khôi phục giá trị cũ
+            }
+        });
+    });
+});
 </script>
 
 </body>

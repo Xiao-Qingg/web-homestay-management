@@ -201,7 +201,7 @@
                                 <li><a class="dropdown-item" href="/web-homestay-management/views/profile.php"><i class="fas fa-user-circle"></i> Hồ sơ</a></li>
                                 <li><a class="dropdown-item" href="/web-homestay-management/views/my_bookings.php"><i class="fas fa-calendar"></i> Đặt phòng của tôi</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="./handles/logout_process.php"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
+                                <li><a class="dropdown-item" href="/web-homestay-management/handles/logout_process.php"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
                             </ul>
                         </div>
                         <a href="/web-homestay-management/views/favorites.php" class="btn btn-link position-relative me-3">

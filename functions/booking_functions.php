@@ -23,7 +23,8 @@ function getAllBookings() {
             h.location,
             b.fullname,
             b.phone,
-            b.address
+            b.address,
+            b.payment
         FROM bookings b
         JOIN users u ON b.user_id = u.id
         JOIN homestays h ON b.homestay_id = h.id
@@ -54,17 +55,17 @@ function getAllBookings() {
  * @param string $status
  * @return bool True nếu thành công, False nếu thất bại
  */
-function addBooking($homestay_id, $user_id, $check_in, $check_out, $num_people, $total_price, $status, $fullname, $phone, $address) {
+function addBooking($homestay_id, $user_id, $check_in, $check_out, $num_people, $total_price, $status, $fullname, $phone, $address, $payment) {
     $conn = getDbConnection();
 
     $sql = "
-        INSERT INTO bookings (homestay_id, user_id, check_in, check_out, num_people, total_price, status, fullname, phone, address)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO bookings (homestay_id, user_id, check_in, check_out, num_people, total_price, status, fullname, phone, address, payment)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ";
     $stmt = mysqli_prepare($conn, $sql);
 
     if ($stmt) {
-        mysqli_stmt_bind_param($stmt, "iissidssss", $homestay_id, $user_id, $check_in, $check_out, $num_people, $total_price, $status, $fullname, $phone, $address);
+        mysqli_stmt_bind_param($stmt, "iissidsssss", $homestay_id, $user_id, $check_in, $check_out, $num_people, $total_price, $status, $fullname, $phone, $address, $payment);
         $success = mysqli_stmt_execute($stmt);
 
         mysqli_stmt_close($stmt);
@@ -99,7 +100,8 @@ function getBookingsByUserId($user_id) {
             b.created_at,
             b.fullname,
             b.phone,
-            b.address
+            b.address,
+            b.payment
         FROM bookings b
         JOIN homestays h ON b.homestay_id = h.id
         WHERE b.user_id = ?
@@ -136,7 +138,8 @@ function getBookingById($booking_id) {
             u.fullname AS customer_name,
             u.phone AS customer_phone,
             h.homestay_name,
-            h.location
+            h.location,
+            b.payment
         FROM bookings b
         JOIN users u ON b.user_id = u.id
         JOIN homestay_details hd ON b.homestay_detail_id = hd.id
@@ -176,13 +179,13 @@ function updateBooking($id, $homestay_detail_id, $user_id, $check_in, $check_out
     $sql = "
         UPDATE bookings 
         SET homestay_detail_id = ?, user_id = ?, check_in = ?, check_out = ?, 
-            num_people = ?, total_price = ?, status = ?, fullname = ?, phone = ?, address = ?
+            num_people = ?, total_price = ?, status = ?, fullname = ?, phone = ?, address = ?, payment = ?
         WHERE booking_id = ?
     ";
     $stmt = mysqli_prepare($conn, $sql);
 
     if ($stmt) {
-        mysqli_stmt_bind_param($stmt, "iissidssssi", $homestay_detail_id, $user_id, $check_in, $check_out, $num_people, $total_price, $status, $fullname, $phone, $address, $id);
+        mysqli_stmt_bind_param($stmt, "iissidsssssi", $homestay_detail_id, $user_id, $check_in, $check_out, $num_people, $total_price, $status, $fullname, $phone, $address, $payment, $id);
         $success = mysqli_stmt_execute($stmt);
 
         mysqli_stmt_close($stmt);

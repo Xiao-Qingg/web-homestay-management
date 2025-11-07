@@ -101,6 +101,8 @@ function getHomestayDetailById($id) {
             r.description AS description,
             r.capacity AS capacity,
             a.name AS amenity_name,
+            hd.description AS description,
+            hd.host AS host,
             i.room_image_url AS room_image_url
         FROM homestay_details hd
         JOIN homestays h ON hd.homestay_id = h.id

@@ -60,19 +60,25 @@ function handleCreateBooking() {
     $fullname = isset($_POST['fullname']) ? trim($_POST['fullname']) : '';
     $address = isset($_POST['address']) ? trim($_POST['address']) : '';
     $phone = isset($_POST['phone']) ? trim($_POST['phone']) : '';
+    $payment = isset($_POST['payment']) ? trim($_POST['payment']) : 'Tiền mặt';
+    $valid_payment_methods = ['Tiền mặt', 'Chuyển khoản ngân hàng', 'Thẻ tín dụng'];
+    if (!in_array($payment, $valid_payment_methods)) {
+        $payment = 'Tiền mặt';
+    }
+    
     $status = 'Đang chờ xử lý'; // Mặc định là pending
 
     // Validate dữ liệu
     if (empty($homestay_id) || empty($user_id) || empty($check_in) || 
         empty($check_out) || empty($num_people) || empty($total_price)
-        || empty($fullname) || empty($address) || empty($phone)){
+        || empty($fullname) || empty($address) || empty($phone) ){
         header("Location: ../views/index.php?error=Vui lòng điền đầy đủ thông tin");
         exit();
     }
 
     // Gọi hàm addBooking từ booking_functions.php
     // Lưu ý: homestay_detail_id = homestay_id (nếu bạn không có bảng homestay_details riêng)
-    $result = addBooking($homestay_id, $user_id, $check_in, $check_out, $num_people, $total_price, $status, $fullname, $phone, $address);
+    $result = addBooking($homestay_id, $user_id, $check_in, $check_out, $num_people, $total_price, $status, $fullname, $phone, $address, $payment);
 
     if ($result) {
         //thêm đoạn để hiển thị thông báo thành công
@@ -215,7 +221,24 @@ if (isset($_POST['action']) && $_POST['action'] === 'update_status') {
     mysqli_close($conn);
     exit();
 }
+// $payment_method = $_POST['payment_method'] ?? 'Tiền mặt';
 
+// // Thêm validation
+// $valid_payment_methods = ['Tiền mặt', 'Chuyển khoản ngân hàng', 'Thẻ tín dụng', ];
+// if (!in_array($payment_method, $valid_payment_methods)) {
+//     $payment_method = 'Tiền mặt';
+// }
+
+// // Nếu là credit card, lấy thêm thông tin thẻ
+// $card_info = null;
+// if ($payment_method === 'credit_card') {
+//     $card_info = [
+//         'card_number' => substr($_POST['card_number'] ?? '', -4), // Chỉ lưu 4 số cuối
+//         'card_holder' => $_POST['card_holder'] ?? '',
+//         'card_expiry' => $_POST['card_expiry'] ?? ''
+//         // KHÔNG lưu CVV vào database (bảo mật)
+//     ];
+// }
 
 ?>
 

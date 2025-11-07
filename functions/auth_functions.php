@@ -55,12 +55,9 @@ function authenticateUser($conn, $username, $password) {
     if ($result && mysqli_num_rows($result) > 0) {
         $user = mysqli_fetch_assoc($result);
         
-        // ✅ Kiểm tra tài khoản bị khóa trước
         if (isset($user['status']) && $user['status'] === 'Bị khóa') {
             return ['error' => 'locked'];
         }
-
-        // ✅ Sau đó mới kiểm tra mật khẩu
         if ($password === $user['password']) {
             mysqli_stmt_close($stmt);
             return $user;

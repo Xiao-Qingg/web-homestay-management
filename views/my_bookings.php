@@ -145,7 +145,10 @@ $logged = isset($_SESSION['user_id']) || isset($_SESSION['id']);
                                                 <?= number_format($b['total_price'], 0, ',', '.') ?>đ
                                             </strong>
                                         </div>
-                                        
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span><i class="fas fa-users"></i> Phương thức:</span>
+                                            <strong><?= $b['payment'] ?> </strong>
+                                        </div>
                                         <div class="d-grid gap-2">
                                             <?php
                                                 if ($statusClass === 'status-pending') {

@@ -17,7 +17,6 @@ function logout($redirectPath = '../views/login.php') {
     session_unset();
     session_destroy();
     session_start();
-    $_SESSION['success'] = 'Đăng xuất thành công!';
     header('Location: ' . $redirectPath);
     exit();
 }

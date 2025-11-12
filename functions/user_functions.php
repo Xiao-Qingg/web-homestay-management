@@ -1,14 +1,12 @@
 <?php
 require_once 'db_connection.php';
 
-
 /**
  * Lấy tất cả users có role_id = 2 (khách hàng)
  */
 function getAllUsers() {
     $conn = getDbConnection();
     
-    // Truy vấn chỉ lấy users có role_id = 2
     $sql = "SELECT id, fullname, username, phone, address, created_at, role_id, status 
             FROM users 
             WHERE role_id = 2 
@@ -25,7 +23,6 @@ function getAllUsers() {
     mysqli_close($conn);
     return $users;
 }
-
 
 /**
  * Lấy users theo role_id
@@ -62,7 +59,6 @@ function getUsersByRole($role_id) {
 function addUser($fullname, $username, $password, $phone, $address) {
     $conn = getDbConnection();
     
-    // Mặc định role_id = 2 (user thường)
     $sql = "INSERT INTO users (fullname, username, password, phone, address, role_id, created_at, status) 
             VALUES (?, ?, ?, ?, ?, 2, NOW(), 'Hoạt động')";
     $stmt = mysqli_prepare($conn, $sql);
@@ -81,12 +77,12 @@ function addUser($fullname, $username, $password, $phone, $address) {
 }
 
 /**
- * Lấy thông tin một user theo ID
+ * Lấy thông tin một user theo ID (bao gồm cả password để xác thực)
  */
 function getUserById($id) {
     $conn = getDbConnection();
     
-    $sql = "SELECT id, fullname, username, phone, address, created_at, role_id, status 
+    $sql = "SELECT id, fullname, username, password, phone, address, created_at, role_id, status 
             FROM users 
             WHERE id = ? 
             LIMIT 1";
@@ -191,6 +187,9 @@ function toggleUserStatus($id) {
     return false;
 }
 
+/**
+ * Cập nhật profile user (không đổi username và password)
+ */
 function updateUserProfile($id, $fullname, $phone, $address) {
     $conn = getDbConnection();
 
@@ -209,14 +208,18 @@ function updateUserProfile($id, $fullname, $phone, $address) {
     mysqli_close($conn);
     return false;
 }
-function changeNewPassword($id, $password) {
+
+/**
+ * Đổi mật khẩu user
+ */
+function changeUserPassword($id, $new_password) {
     $conn = getDbConnection();
 
-    $sql = "UPDATE users SET password?";
+    $sql = "UPDATE users SET password = ? WHERE id = ?";
     $stmt = mysqli_prepare($conn, $sql);
 
     if ($stmt) {
-        mysqli_stmt_bind_param($stmt, "sssi", $fullname, $phone, $address, $id);
+        mysqli_stmt_bind_param($stmt, "si", $new_password, $id);
         $success = mysqli_stmt_execute($stmt);
 
         mysqli_stmt_close($stmt);
@@ -227,6 +230,5 @@ function changeNewPassword($id, $password) {
     mysqli_close($conn);
     return false;
 }
-
 
 ?>

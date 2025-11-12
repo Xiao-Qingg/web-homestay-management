@@ -74,8 +74,6 @@ $subtotal = $price_per_night * $nights;
 $total = $subtotal;
 ?>
 
-<!DOCTYPE html>
-<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -196,7 +194,7 @@ $total = $subtotal;
                                 <input type="radio" name="payment" value="Thẻ tín dụng">
                                 <div class="payment-content">
                                     <div class="payment-title">
-                                        <span class="payment-icon">💳</span>
+                                        <span class="payment-icon"><i class="fa-solid fa-credit-card"></i></span>
                                         <strong>Thẻ tín dụng / Ghi nợ</strong>
                                         <span class="payment-badge">AN TOÀN</span>
                                     </div>
@@ -441,4 +439,3 @@ $total = $subtotal;
         });
     </script>
 </body>
-</html>

@@ -27,6 +27,7 @@ $homestay_id = (int)($_GET['id'] ?? 0);
 $homestay = null;
 $images = getHomestayImages($homestay_id);
 $rooms = getRoomsByHomestayId($homestay_id);
+$amenities_list = getAmenitiesByHomestayId($homestay_id);
 if ($homestay_id > 0) {
     $homestay = getHomestayById($homestay_id);
 }
@@ -574,7 +575,7 @@ $logged = isset($_SESSION['id']) || isset($_SESSION['user_id']);
                             <tr>
                                 <th>Tên phòng</th>
                                 <th>Sức chứa</th>
-                                <th>Tiện nghi</th>
+                                <!-- <th>Tiện nghi</th> -->
                                 <th>Mô tả</th>
                             </tr>
                         </thead>
@@ -583,7 +584,7 @@ $logged = isset($_SESSION['id']) || isset($_SESSION['user_id']);
                                 <tr>
                                     <td><strong><?= htmlspecialchars($room['room_name']) ?></strong></td>
                                     <td><i class="fas fa-user"></i> <?= htmlspecialchars($room['capacity']) ?> người</td>
-                                    <td><?= htmlspecialchars($room['amenity_name']) ?></td>
+                                    <!-- <td><?= htmlspecialchars($room['amenity_name']) ?></td> -->
                                     <td><?= htmlspecialchars($room['description']) ?></td>
                                 </tr>
                             <?php endforeach; ?>
@@ -595,28 +596,15 @@ $logged = isset($_SESSION['id']) || isset($_SESSION['user_id']);
                 <div class="section">
                     <h2><i class="fas fa-star"></i> Tiện nghi</h2>
                     <div class="amenities-grid">
-                        <?php
-                        $amenities_list = !empty($homestay['amenities']) ? explode(',', $homestay['amenities']) : ['WiFi miễn phí', 'Bếp đầy đủ', 'View đẹp', 'Chỗ đậu xe'];
-                        $amenity_icons = [
-                            '<i class="fa-solid fa-wifi"></i>', 
-                            '<i class="fa-solid fa-kitchen-set"></i>', 
-                            '<i class="fa-solid fa-mountain-sun"></i>', 
-                            '<i class="fa-solid fa-square-parking"></i>',
-                            '<i class="fa-solid fa-snowflake"></i>',
-                            '<i class="fa-solid fa-tv"></i>',
-                            '<i class="fa-solid fa-shirt"></i>',
-                            '<i class="fa-solid fa-house"></i>'
-                        ];
-                        
-                        foreach ($amenities_list as $index => $amenity):
-                            $icon = $amenity_icons[$index % count($amenity_icons)];
-                        ?>
-                        <div class="amenity-item">
-                            <span class="amenity-icon"><?= $icon ?></span>
-                            <span><?= htmlspecialchars(trim($amenity)) ?></span>
-                        </div>
+                        <?php foreach ($amenities_list as $amenity): ?>
+                            <div class="amenity-item">
+                                <span class="amenity-icon"><i class="fa-solid fa-circle-check"></i></span>
+                                <span><?= htmlspecialchars($amenity) ?></span>
+                            </div>
                         <?php endforeach; ?>
                     </div>
+
+
                 </div>
 
                 <!-- Host Info -->

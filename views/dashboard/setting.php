@@ -1,25 +1,76 @@
 <?php
-// session_start();
+session_start();
 $current_page = 'settings';
 $page_title = 'Cài đặt';
 
-// Load functions nếu cần
-require_once __DIR__ . '/../../handles/user_process.php';
+// Kiểm tra đăng nhập
+if (!isset($_SESSION['id'])) {
+    header("Location: ../../index.php");
+    exit();
+}
 
-$current_user = [
-    'id' => $_SESSION['user_id'] ?? 1,
-    'username' => $_SESSION['username'] ?? 'admin',
-    'fullname' => $_SESSION['fullname'] ?? 'Administrator',
-    'email' => $_SESSION['email'] ?? 'admin@homestay.com',
-    'phone' => $_SESSION['phone'] ?? '0123456789',
-    'role' => $_SESSION['role'] ?? 'admin'
-];
+// Load functions
+require_once __DIR__ . '/../../functions/user_functions.php';
+
+// Lấy thông tin user thật từ DB
+$current_user = getUserById($_SESSION['id']);
+
+if (!$current_user) {
+    header("Location: ../../handles/logout_process.php");
+    exit();
+}
+
+// Xử lý cập nhật profile
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
+    $fullname = trim($_POST['fullname']);
+    $phone = trim($_POST['phone']);
+    $address = trim($_POST['address']);
+    
+    if (!empty($fullname)) {
+        if (updateUserProfile($_SESSION['id'], $fullname, $phone, $address)) {
+            $_SESSION['success'] = "Cập nhật thông tin thành công!";
+            // Cập nhật lại thông tin
+            $current_user = getUserById($_SESSION['id']);
+        } else {
+            $_SESSION['error'] = "Cập nhật thông tin thất bại!";
+        }
+    } else {
+        $_SESSION['error'] = "Họ tên không được để trống!";
+    }
+    header("Location: setting.php");
+    exit();
+}
+
+// Xử lý đổi mật khẩu
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
+    $current_password = trim($_POST['current_password']);
+    $new_password = trim($_POST['new_password']);
+    $confirm_password = trim($_POST['confirm_password']);
+    
+    // Validate
+    if (empty($current_password) || empty($new_password) || empty($confirm_password)) {
+        $_SESSION['error'] = "Vui lòng điền đầy đủ thông tin!";
+    } elseif (strlen($new_password) < 8) {
+        $_SESSION['error'] = "Mật khẩu mới phải có ít nhất 8 ký tự!";
+    } elseif ($new_password !== $confirm_password) {
+        $_SESSION['error'] = "Mật khẩu xác nhận không khớp!";
+    } elseif ($current_password !== $current_user['password']) {
+        $_SESSION['error'] = "Mật khẩu hiện tại không đúng!";
+    } else {
+        if (changeUserPassword($_SESSION['id'], $new_password)) {
+            $_SESSION['success'] = "Đổi mật khẩu thành công!";
+        } else {
+            $_SESSION['error'] = "Đổi mật khẩu thất bại!";
+        }
+    }
+    header("Location: setting.php");
+    exit();
+}
 
 include './menu.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -35,6 +86,22 @@ include './menu.php';
     <div class="header">
         <h1><i class="fas fa-cog"></i> Cài đặt</h1>
     </div>
+
+    <?php if (isset($_SESSION['success'])): ?>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> <?= $_SESSION['success'] ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <?php unset($_SESSION['success']); ?>
+    <?php endif; ?>
+
+    <?php if (isset($_SESSION['error'])): ?>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle"></i> <?= $_SESSION['error'] ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <?php unset($_SESSION['error']); ?>
+    <?php endif; ?>
 
     <div class="settings-container">
         <!-- Settings Navigation -->
@@ -68,22 +135,9 @@ include './menu.php';
                 <h2 class="section-title">Thông tin cá nhân</h2>
                 <p class="section-description">Cập nhật thông tin tài khoản của bạn</p>
 
-                <form action="../../handles/update_profile.php" method="POST" enctype="multipart/form-data">
-                    <div class="avatar-upload">
-                        <div class="avatar-preview" id="avatarPreview">
-                            <?= strtoupper(substr($current_user['fullname'], 0, 1)) ?>
-                        </div>
-                        <div class="avatar-actions">
-                            <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="previewAvatar(this)">
-                            <button type="button" class="btn btn-secondary" onclick="document.getElementById('avatarInput').click()">
-                                <i class="fas fa-upload"></i> Tải ảnh lên
-                            </button>
-                            <button type="button" class="btn btn-secondary">
-                                <i class="fas fa-trash"></i> Xóa ảnh
-                            </button>
-                        </div>
-                    </div>
-
+                <form method="POST">
+                    <input type="hidden" name="update_profile" value="1">
+                    
                     <div class="form-row">
                         <div class="form-group">
                             <label>Họ và tên *</label>
@@ -91,23 +145,25 @@ include './menu.php';
                         </div>
                         <div class="form-group">
                             <label>Tên đăng nhập</label>
-                            <input type="text" name="username" value="<?= htmlspecialchars($current_user['username']) ?>" disabled>
+                            <input type="text" value="<?= htmlspecialchars($current_user['username']) ?>" disabled>
                         </div>
                     </div>
 
                     <div class="form-row">
-                        
                         <div class="form-group">
                             <label>Số điện thoại</label>
-                            <input type="tel" name="phone" value="<?= htmlspecialchars($current_user['phone']) ?>">
+                            <input type="tel" name="phone" value="<?= htmlspecialchars($current_user['phone'] ?? '') ?>">
                         </div>
-                         <div class="form-group">
+                        <div class="form-group">
                             <label>Vai trò</label>
-                            <input type="text" value="<?= $current_user['role']  ?>" disabled>
+                            <input type="text" value="<?= $current_user['role_id'] == 1 ? 'Admin' : 'Người dùng' ?>" disabled>
                         </div>
                     </div>
 
-                   
+                    <div class="form-group">
+                        <label>Địa chỉ</label>
+                        <input type="text" name="address" value="<?= htmlspecialchars($current_user['address'] ?? '') ?>">
+                    </div>
 
                     <div class="form-actions">
                         <button type="submit" class="btn btn-primary">
@@ -133,7 +189,9 @@ include './menu.php';
                     <p>Cập nhật mật khẩu thường xuyên để bảo vệ tài khoản của bạn</p>
                 </div>
 
-                <form action="../../handles/change_password.php" method="POST">
+                <form method="POST">
+                    <input type="hidden" name="change_password" value="1">
+                    
                     <div class="form-group">
                         <label>Mật khẩu hiện tại *</label>
                         <input type="password" name="current_password" required>
@@ -156,14 +214,6 @@ include './menu.php';
                         </button>
                     </div>
                 </form>
-
-                <div class="settings-card" style="margin-top: 30px;">
-                    <h4><i class="fas fa-shield-alt"></i> Xác thực hai yếu tố</h4>
-                    <p>Tăng cường bảo mật bằng cách yêu cầu mã xác thực khi đăng nhập</p>
-                    <button class="btn btn-secondary" style="margin-top: 10px;">
-                        <i class="fas fa-plus"></i> Kích hoạt 2FA
-                    </button>
-                </div>
             </div>
 
             <!-- Notifications Section -->
@@ -322,7 +372,7 @@ include './menu.php';
     </div>
 </main>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 <script src="../../assets/js/setting.js"></script>
 
 </body>
-</html>

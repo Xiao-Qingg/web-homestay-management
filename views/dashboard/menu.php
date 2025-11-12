@@ -19,7 +19,7 @@ $current_page = $current_page ?? 'dashboard';
 <body>
      <aside class="sidebar">
     <div class="sidebar-header">
-        <h2>Homestay Paradise</h2>
+        <h2>Group 22</h2>
         <small>Admin Panel</small>
     </div>
     <ul style="padding-left:0 !important;" class="sidebar-menu">
@@ -33,19 +33,14 @@ $current_page = $current_page ?? 'dashboard';
                 <span><i class="fa-solid fa-house"></i></span> Quản lý Homestay
             </a>
         </li>
+         <li>
+            <a href="user.php" class="<?= ($current_page === 'users') ? 'active' : ''; ?>">
+                <span><i class="fa-solid fa-user"></i></span> Quản lý người dùng
+            </a>
+        </li>
         <li>
             <a href="booking.php" class="<?= ($current_page === 'bookings') ? 'active' : ''; ?>">
-                <span><i class="fa-solid fa-calendar-days"></i></span> Đặt phòng
-            </a>
-        </li>
-        <li>
-            <a href="user.php" class="<?= ($current_page === 'users') ? 'active' : ''; ?>">
-                <span><i class="fa-solid fa-user"></i></span> Người dùng
-            </a>
-        </li>
-        <li>
-            <a href="statistics.php" class="<?= ($current_page === 'statistics') ? 'active' : ''; ?>">
-                <span><i class="fa-solid fa-chart-line"></i></span> Thống kê
+                <span><i class="fa-solid fa-calendar-days"></i></span> Quản lý Booking
             </a>
         </li>
         <li>

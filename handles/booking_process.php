@@ -13,18 +13,18 @@ switch ($action) {
     case 'create':
         handleCreateBooking();
         break;
-    // case 'edit':
-    //     handleEditBooking();
-    //     break;
     case 'delete':
         handleDeleteBooking();
         break;
     case 'deleteFromUser':
         handleDeleteBookingUser();
         break;
-    // default:
-    //     header("Location: ../views/dashboard/dashboard.php?error=Hành động không hợp lệ");
-    //     exit();
+    case 'update_status':
+        handleUpdateStatus();
+        break;
+    case 'update_note':
+        handleUpdateNote();
+        break;
 }
 
 /**
@@ -37,6 +37,7 @@ function handleGetAllBookings() {
 function handleGetBookingById($id) {
     return getBookingById($id);
 }
+
 function handleGetBookingsByUserId($user_id) {
     return getBookingsByUserId($user_id);
 }
@@ -66,7 +67,7 @@ function handleCreateBooking() {
         $payment = 'Tiền mặt';
     }
     
-    $status = 'Đang chờ xử lý'; // Mặc định là pending
+    $status = 'Đang chờ xử lý';
 
     // Validate dữ liệu
     if (empty($homestay_id) || empty($user_id) || empty($check_in) || 
@@ -76,102 +77,50 @@ function handleCreateBooking() {
         exit();
     }
 
-    // Gọi hàm addBooking từ booking_functions.php
-    // Lưu ý: homestay_detail_id = homestay_id (nếu bạn không có bảng homestay_details riêng)
     $result = addBooking($homestay_id, $user_id, $check_in, $check_out, $num_people, $total_price, $status, $fullname, $phone, $address, $payment);
 
     if ($result) {
-        //thêm đoạn để hiển thị thông báo thành công
         $_SESSION['booking_success'] = "Đặt phòng thành công! Chúng tôi sẽ liên hệ với bạn qua số điện thoại $phone.";
         header("Location: ../index.php?success=1");
     } else {
-        // Thất bại: quay lại trang booking với thông báo lỗi
         header("Location: ../index.php?error=Có lỗi xảy ra khi đặt phòng. Vui lòng thử lại!");
     }
     exit();
 }
 
 /**
- * Xử lý chỉnh sửa booking
-  */
-// function handleEditBooking() {
-//     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-//         header("Location: ../views/booking.php?error=Phương thức không hợp lệ");
-//         exit();
-//     }
-
-//     if (
-//         !isset($_POST['booking_id']) ||
-//         !isset($_POST['homestay_detail_id']) ||
-//         !isset($_POST['user_id']) ||
-//         !isset($_POST['check_in']) ||
-//         !isset($_POST['check_out']) ||
-//         !isset($_POST['num_people']) ||
-//         !isset($_POST['total_price']) ||
-//         !isset($_POST['status'])
-//     ) {
-//         header("Location: ../views/booking/edit_booking.php?booking_id=" . ($_POST['booking_id'] ?? '') . "&error=Thiếu thông tin cần thiết");
-//         exit();
-//     }
-
-//     $booking_id = $_POST['booking_id'];
-//     $homestay_detail_id = trim($_POST['homestay_detail_id']);
-//     $user_id = trim($_POST['user_id']);
-//     $check_in = trim($_POST['check_in']);
-//     $check_out = trim($_POST['check_out']);
-//     $num_people = trim($_POST['num_people']);
-//     $total_price = trim($_POST['total_price']);
-//     $status = trim($_POST['status']);
-
-//     if (
-//         empty($booking_id) || empty($homestay_detail_id) || empty($user_id) ||
-//         empty($check_in) || empty($check_out) ||
-//         empty($num_people) || empty($total_price) || empty($status)
-//     ) {
-//         header("Location: ../views/booking/edit_booking.php?booking_id=" . $booking_id . "&error=Vui lòng điền đầy đủ thông tin");
-//         exit();
-//     }
-
-//     $result = updateBooking($booking_id, $homestay_detail_id, $user_id, $check_in, $check_out, $num_people, $total_price, $status);
-
-//     if ($result) {
-//         header("Location: ../views/booking.php?success=Cập nhật booking thành công");
-//     } else {
-//         header("Location: ../views/booking/edit_booking.php?booking_id=" . $booking_id . "&error=Cập nhật booking thất bại");
-//     }
-//     exit();
-// }
-
-/**
  * Xử lý xóa booking
  */
 function handleDeleteBooking() {
     if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-        header("Location: ../views/dashboard/booking.php?error=Phương thức không hợp lệ");
+        header("Location: ../views/dashboard/bookings.php?error=Phương thức không hợp lệ");
         exit();
     }
 
     if (!isset($_GET['booking_id']) || empty($_GET['booking_id'])) {
-        header("Location: ../view/dashboard/booking.php?error=Không tìm thấy ID booking");
+        header("Location: ../views/dashboard/bookings.php?error=Không tìm thấy ID booking");
         exit();
     }
 
     $booking_id = $_GET['booking_id'];
     if (!is_numeric($booking_id)) {
-        header("Location: ../views/dashboard/booking.php?error=ID booking không hợp lệ");
+        header("Location: ../views/dashboard/bookings.php?error=ID booking không hợp lệ");
         exit();
     }
 
     $result = deleteBooking($booking_id);
 
     if ($result) {
-        header("Location: ../views/dashboard/booking.php?success=Xóa booking thành công");
+        header("Location: ../views/dashboard/bookings.php?success=Xóa booking thành công");
     } else {
-        header("Location: ../views/dashboard/booking.php?error=Xóa booking thất bại");
+        header("Location: ../views/dashboard/bookings.php?error=Xóa booking thất bại");
     }
     exit();
 }
 
+/**
+ * Xử lý xóa booking từ user
+ */
 function handleDeleteBookingUser() {
     if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
         header("Location: ../views/my_bookings.php?error=Phương thức không hợp lệ");
@@ -194,52 +143,66 @@ function handleDeleteBookingUser() {
     if ($result) {
         header("Location: ../views/my_bookings.php?success=Xóa booking thành công");
     } else {
-        header("Location: ../views/my_bookings.phpp?error=Xóa booking thất bại");
+        header("Location: ../views/my_bookings.php?error=Xóa booking thất bại");
     }
     exit();
 }
 
-if (isset($_POST['action']) && $_POST['action'] === 'update_status') {
-    require_once __DIR__ . '/../functions/db_connection.php';
+/**
+ * Xử lý cập nhật trạng thái
+ */
+function handleUpdateStatus() {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        echo 'error';
+        exit();
+    }
 
-    $booking_id = (int)$_POST['booking_id'];
-    $status = $_POST['status'];
+    $booking_id = isset($_POST['booking_id']) ? (int)$_POST['booking_id'] : 0;
+    $status = isset($_POST['status']) ? trim($_POST['status']) : '';
 
-    $conn = getDbConnection();
-    $sql = "UPDATE bookings SET status = ? WHERE booking_id = ?";
-    $stmt = mysqli_prepare($conn, $sql);
+    if ($booking_id <= 0 || empty($status)) {
+        echo 'error';
+        exit();
+    }
 
-    if ($stmt) {
-        mysqli_stmt_bind_param($stmt, "si", $status, $booking_id);
-        mysqli_stmt_execute($stmt);
-        mysqli_stmt_close($stmt);
-        echo "success";
+    $result = updateBookingStatus($booking_id, $status);
+
+    if ($result) {
+        echo 'success';
     } else {
-        echo "fail";
+        echo 'error';
     }
-
-    mysqli_close($conn);
     exit();
 }
-// $payment_method = $_POST['payment_method'] ?? 'Tiền mặt';
 
-// // Thêm validation
-// $valid_payment_methods = ['Tiền mặt', 'Chuyển khoản ngân hàng', 'Thẻ tín dụng', ];
-// if (!in_array($payment_method, $valid_payment_methods)) {
-//     $payment_method = 'Tiền mặt';
-// }
+/**
+ * Xử lý cập nhật ghi chú
+ */
+/**
+ * Xử lý cập nhật ghi chú
+ */
+function handleUpdateNote() {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        header("Location: bookings.php?error=Phương thức không hợp lệ");
+        exit();
+    }
 
-// // Nếu là credit card, lấy thêm thông tin thẻ
-// $card_info = null;
-// if ($payment_method === 'credit_card') {
-//     $card_info = [
-//         'card_number' => substr($_POST['card_number'] ?? '', -4), // Chỉ lưu 4 số cuối
-//         'card_holder' => $_POST['card_holder'] ?? '',
-//         'card_expiry' => $_POST['card_expiry'] ?? ''
-//         // KHÔNG lưu CVV vào database (bảo mật)
-//     ];
-// }
+    $booking_id = isset($_POST['booking_id']) ? (int)$_POST['booking_id'] : 0;
+    $note = isset($_POST['note']) ? trim($_POST['note']) : '';
+
+    if ($booking_id <= 0) {
+        header("Location: booking_detail.php?booking_id=$booking_id&error=ID không hợp lệ");
+        exit();
+    }
+
+    $result = updateBookingNote($booking_id, $note);
+
+    if ($result) {
+        header("Location: booking_detail.php?booking_id=$booking_id&success=Ghi chú đã được lưu!");
+    } else {
+        header("Location: booking_detail.php?booking_id=$booking_id&error=Cập nhật thất bại!");
+    }
+    exit();
+}
 
 ?>
-
-

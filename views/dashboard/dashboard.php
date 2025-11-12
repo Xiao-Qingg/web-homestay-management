@@ -165,7 +165,7 @@ include './menu.php';
                     <?php foreach ($recent_bookings as $booking): ?>
                         <tr>
                             <td>#<?= $booking['booking_id'] ?></td>
-                            <td><?= htmlspecialchars($booking['user_fullname'] ?? 'N/A') ?></td>
+                            <td><?= htmlspecialchars($booking['fullname'] ?? 'N/A') ?></td>
                             <td><?= htmlspecialchars($booking['homestay_name'] ?? 'N/A') ?></td>
                             <td><?= date('d/m/Y', strtotime($booking['created_at'])) ?></td>
                             <td><?= number_format($booking['total_price']) ?> đ</td>

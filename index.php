@@ -12,8 +12,8 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // Nếu đang đăng nhập với vai trò admin thì tự động đăng xuất
 if (isset($_SESSION['role_id']) && (int)$_SESSION['role_id'] === 1) {
-    session_unset(); // Xóa toàn bộ biến session
-    session_destroy(); // Hủy session
+    session_unset();
+    session_destroy();
     header("Location: ./index.php");
     exit();
 }
@@ -33,7 +33,6 @@ foreach ($homestays as $homestay) {
         'guests' => $homestay['max_people'],
         'image' => $homestay['image_url'],
         'status' => $homestay['status'],
-        // 'amenities' => $amenities 
     ];
 }
 
@@ -64,6 +63,29 @@ if (isset($_GET['rooms']) && !empty($_GET['rooms'])) {
     });
 }
 
+// === PHÂN TRANG ===
+$items_per_page = 6; // Số homestay mỗi trang
+$total_items = count($search_results);
+$total_pages = ceil($total_items / $items_per_page);
+
+// Lấy trang hiện tại từ URL, mặc định là trang 1
+$current_page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+$current_page = min($current_page, max(1, $total_pages)); // Đảm bảo không vượt quá tổng số trang
+
+// Tính offset
+$offset = ($current_page - 1) * $items_per_page;
+
+// Lấy homestay cho trang hiện tại
+$search_results = array_values($search_results); // Reset keys
+$current_page_items = array_slice($search_results, $offset, $items_per_page);
+
+// Hàm tạo URL phân trang giữ nguyên các tham số filter
+function getPaginationUrl($page) {
+    $params = $_GET;
+    $params['page'] = $page;
+    return 'index.php?' . http_build_query($params);
+}
+
 ?>
 <head>
     <meta charset="UTF-8">
@@ -80,7 +102,7 @@ if (isset($_GET['rooms']) && !empty($_GET['rooms'])) {
     <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
-        <!-- Thông báo thành công -->
+    <!-- Thông báo thành công -->
     <?php if (isset($_SESSION['booking_success'])): ?>
          <script>
                 alert("<?= htmlspecialchars($_SESSION['booking_success']) ?>");
@@ -100,6 +122,7 @@ if (isset($_GET['rooms']) && !empty($_GET['rooms'])) {
         </div>
     </div>
     <?php endif; ?>
+    
     <!-- Top Bar -->
     <?php include './views/header.php'?>
 
@@ -196,7 +219,7 @@ if (isset($_GET['rooms']) && !empty($_GET['rooms'])) {
             <?php else: ?>
                 Kết quả lọc
             <?php endif; ?>
-            - Tìm thấy <strong><?php echo count($search_results); ?></strong> homestay
+            - Tìm thấy <strong><?php echo $total_items; ?></strong> homestay
             <a href="index.php" class="btn btn-sm btn-outline-secondary float-end">
                 <i class="fas fa-times"></i> Xóa bộ lọc
             </a>
@@ -207,9 +230,9 @@ if (isset($_GET['rooms']) && !empty($_GET['rooms'])) {
             <i class="fas fa-star text-warning"></i> Homestay Nổi Bật
         </h2>
 
-        <?php if (count($search_results) > 0): ?>
+        <?php if ($total_items > 0): ?>
         <div class="row" id="homestayContainer">
-            <?php foreach ($search_results as $homestay): ?>
+            <?php foreach ($current_page_items as $homestay): ?>
             <div class="col-lg-4 col-md-6 homestay-item mb-4" data-price="<?php echo $homestay['price']; ?>">
                 <div class="card homestay-card h-100">
                     <div class="position-relative">
@@ -220,9 +243,7 @@ if (isset($_GET['rooms']) && !empty($_GET['rooms'])) {
                         <span class="price-tag"><?php echo number_format($homestay['price']); ?>đ/đêm</span>
                     </div>
                     <div class="card-body">
-                        
                         <h5 class="card-title"><?php echo htmlspecialchars($homestay['name']); ?></h5>
-                            
                         <p class="text-muted mb-2">
                             <i class="fas fa-map-marker-alt"></i> <?php echo htmlspecialchars($homestay['location']); ?>
                         </p>
@@ -230,29 +251,54 @@ if (isset($_GET['rooms']) && !empty($_GET['rooms'])) {
                             <span class="me-3"><i class="fas fa-bed"></i> <?php echo $homestay['rooms']; ?> phòng</span>
                             <span><i class="fas fa-users"></i> <?php echo $homestay['guests']; ?> khách</span>
                         </div>
-                        <!-- <div class="mb-3">
-                            <?php //foreach ($homestay['amenities'] as $amenity): ?>
-                            <span class="amenity-badge"><i class="fas fa-check"></i> <?php //echo htmlspecialchars($amenity); ?></span>
-                            <?php //endforeach; ?>
-                        </div> -->
                         <div class="d-grid gap-2">
                             <a href="./views/homestay_detail.php?id=<?php echo $homestay['id']; ?>" class="btn btn-primary-custom">
                                 <i class="fas fa-eye"></i> Xem chi tiết
                             </a>
                             <?php
                                 $is_favorite = isset($_SESSION['favorites']) && in_array($homestay['id'], $_SESSION['favorites']);
-                                ?>
-                                <a href="./handles/add_to_wishlist.php?id=<?php echo $homestay['id']; ?>" 
-                                class="btn <?php echo $is_favorite ? 'btn-danger' : 'btn-outline-danger'; ?>">
-                                    <i class="fa-solid fa-heart"></i> 
-                                    <?php echo $is_favorite ? 'Đã yêu thích' : 'Thêm vào yêu thích'; ?>
-                                </a>
+                            ?>
+                            <a href="./handles/add_to_wishlist.php?id=<?php echo $homestay['id']; ?>" 
+                               class="btn <?php echo $is_favorite ? 'btn-danger' : 'btn-outline-danger'; ?>">
+                                <i class="fa-solid fa-heart"></i> 
+                                <?php echo $is_favorite ? 'Đã yêu thích' : 'Thêm vào yêu thích'; ?>
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
             <?php endforeach; ?>
         </div>
+
+        <!-- Pagination -->
+        <?php if ($total_pages > 1): ?>
+        <nav aria-label="Homestay pagination">
+            <ul class="pagination justify-content-center mt-4">
+                <!-- Nút Previous -->
+                <li class="page-item <?php echo ($current_page <= 1) ? 'disabled' : ''; ?>">
+                    <a class="page-link" href="<?php echo ($current_page > 1) ? getPaginationUrl($current_page - 1) : '#'; ?>" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                <?php
+                // Hiển thị tất cả các trang
+                for ($i = 1; $i <= $total_pages; $i++) {
+                    $active = ($i == $current_page) ? 'active' : '';
+                    echo '<li class="page-item ' . $active . '"><a class="page-link" href="' . getPaginationUrl($i) . '">' . $i . '</a></li>';
+                }
+                ?>
+
+                <!-- Nút Next -->
+                <li class="page-item <?php echo ($current_page >= $total_pages) ? 'disabled' : ''; ?>">
+                    <a class="page-link" href="<?php echo ($current_page < $total_pages) ? getPaginationUrl($current_page + 1) : '#'; ?>" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <?php endif; ?>
+
         <?php else: ?>
         <div class="text-center py-5">
             <div class="no-results">
@@ -268,9 +314,7 @@ if (isset($_GET['rooms']) && !empty($_GET['rooms'])) {
     </section>
 
     <!-- Footer -->
-    <?php
-        include './views/footer.php'
-    ?>
+    <?php include './views/footer.php' ?>
 
     <!-- Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
@@ -287,6 +331,5 @@ if (isset($_GET['rooms']) && !empty($_GET['rooms'])) {
                 }
             });
         });
-
     </script>
 </body>

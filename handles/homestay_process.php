@@ -355,4 +355,5 @@ function handleDeleteHomestay() {
     }
     exit();
 }
+
 ?>

@@ -108,7 +108,17 @@ include './menu.php';
                     <tbody id="homestayTableBody">
                         <?php 
                         require '../../handles/homestay_process.php';
-                        $homestays = handleGetAllHomestays();
+                        $limit = 5; // số homestay mỗi trang
+                        $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+                        $offset = ($page - 1) * $limit;
+
+                        // Lấy toàn bộ homestay
+                        $all_homestays = handleGetAllHomestays();
+                        $total_homestays = count($all_homestays);
+                        $total_pages = ceil($total_homestays / $limit);
+
+                        // Lấy danh sách homestay cho trang hiện tại
+                        $homestays = array_slice($all_homestays, $offset, $limit);
                         
                         if (empty($homestays)): ?>
                             <tr>
@@ -118,8 +128,9 @@ include './menu.php';
                                 </td>
                             </tr>
                         <?php else: ?>
-                            <?php $index = 1; ?>
+                           <?php $index = $offset + 1; ?>
                             <?php foreach ($homestays as $h): ?>
+
                            <tr class="homestay-row" 
                                 data-name="<?= htmlspecialchars(strtolower($h['homestay_name'] ?? '')) ?>"
                                 data-location="<?= htmlspecialchars(strtolower($h['location'] ?? '')) ?>"
@@ -184,6 +195,35 @@ include './menu.php';
                         <?php endif; ?>
                     </tbody>
                 </table>
+                <?php if ($total_pages > 1): ?>
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center mt-3">
+
+                            <!-- Nút Previous -->
+                            <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
+                                <a class="page-link" href="?page=<?= $page - 1 ?>" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+
+                            <!-- Các số trang -->
+                            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                                <li class="page-item <?= ($i == $page) ? 'active' : '' ?>">
+                                    <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
+                                </li>
+                            <?php endfor; ?>
+
+                            <!-- Nút Next -->
+                            <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : '' ?>">
+                                <a class="page-link" href="?page=<?= $page + 1 ?>" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </nav>
+                    <?php endif; ?>
+
             </div>
         </div>
     </main>

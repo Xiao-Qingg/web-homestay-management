@@ -24,7 +24,6 @@ function getAllHomestays() {
 
 /**
  * Thêm homestay mới với đầy đủ rooms, amenities và images
- * FIXED: Xử lý amenity_id = null, validation tốt hơn
  */
 function addHomestayComplete($homestay_name, $location, $price_per_night, $num_room, $max_people, $image_url, $status, $rooms, $amenities, $images) {
     $conn = getDbConnection();
@@ -51,9 +50,10 @@ function addHomestayComplete($homestay_name, $location, $price_per_night, $num_r
         mysqli_stmt_close($stmt);
         error_log("✓ Created homestay #$homestay_id");
 
-        // 2️⃣ Validate và thêm các phòng (ít nhất 4)
-        if (count($rooms) < 4) {
-            throw new Exception("Cần tối thiểu 4 phòng, hiện có " . count($rooms));
+        // 2️⃣ ✅ FIXED: Validate số phòng phải khớp với num_room (không cứng >= 4)
+        $num_room_int = (int)$num_room;
+        if (count($rooms) !== $num_room_int) {
+            throw new Exception("Số phòng không khớp! Yêu cầu: {$num_room_int}, Thực tế: " . count($rooms));
         }
         
         $room_ids = [];
@@ -163,8 +163,9 @@ function addHomestayComplete($homestay_name, $location, $price_per_night, $num_r
             mysqli_stmt_close($stmt);
         }
 
-        if ($total_insert < 4) {
-            throw new Exception("Phải có ít nhất 4 bản ghi chi tiết, hiện có $total_insert");
+        // ✅ FIXED: Validate số bản ghi phải khớp với num_room
+        if ($total_insert !== $num_room_int) {
+            throw new Exception("Số homestay_details không khớp! Yêu cầu: {$num_room_int}, Thực tế: $total_insert");
         }
         
         error_log("✓ Created $total_insert homestay_details records");
@@ -381,7 +382,6 @@ function updateHomestay($id, $homestay_name, $location, $price_per_night, $num_r
 
 /**
  * Cập nhật homestay đầy đủ với rooms, amenities và images
- * FIXED VERSION - Sửa toàn bộ logic xử lý
  */
 function updateHomestayComplete($id, $homestay_name, $location, $price_per_night, $num_room, $max_people, $image_url, $status, $rooms, $amenities, $images) {
     $conn = getDbConnection();
@@ -461,9 +461,10 @@ function updateHomestayComplete($id, $homestay_name, $location, $price_per_night
             error_log("✓ Deleted " . count($old_image_ids) . " old images");
         }
         
-        // 6. Validate và thêm rooms mới
-        if (count($rooms) < 4) {
-            throw new Exception("Cần tối thiểu 4 phòng, hiện có " . count($rooms));
+        // 6. ✅ FIXED: Validate số phòng phải khớp với num_room
+        $num_room_int = (int)$num_room;
+        if (count($rooms) !== $num_room_int) {
+            throw new Exception("Số phòng không khớp! Yêu cầu: {$num_room_int}, Thực tế: " . count($rooms));
         }
         
         $room_id_mapping = [];
@@ -568,8 +569,9 @@ function updateHomestayComplete($id, $homestay_name, $location, $price_per_night
             $detail_count++;
         }
         
-        if ($detail_count < 4) {
-            throw new Exception("Cần tối thiểu 4 homestay_details, hiện chỉ có: $detail_count");
+        // ✅ FIXED: Validate số homestay_details phải khớp với num_room
+        if ($detail_count !== $num_room_int) {
+            throw new Exception("Số homestay_details không khớp! Yêu cầu: {$num_room_int}, Thực tế: $detail_count");
         }
         
         error_log("✓ Created $detail_count homestay_details records");

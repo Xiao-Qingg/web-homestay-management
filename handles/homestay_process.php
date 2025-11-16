@@ -119,10 +119,11 @@ function handleCreateHomestay() {
         exit();
     }
     
-    // Kiểm tra tối thiểu 4 phòng
-    if (count($rooms) < 4) {
-        error_log("❌ Not enough rooms: " . count($rooms));
-        header("Location: ../views/dashboard/homestay/create_homestay.php?error=Vui lòng thêm ít nhất 4 phòng (hiện có: " . count($rooms) . ")");
+    // ✅ FIXED: Validate số phòng phải khớp với num_room (không cứng >= 4)
+    $num_room_int = (int)$num_room;
+    if (count($rooms) !== $num_room_int) {
+        error_log("❌ Room count mismatch: Expected $num_room_int, got " . count($rooms));
+        header("Location: ../views/dashboard/homestay/create_homestay.php?error=Số phòng không khớp! Yêu cầu: {$num_room_int} phòng, Thực tế: " . count($rooms) . " phòng");
         exit();
     }
     
@@ -281,10 +282,11 @@ function handleEditHomestay() {
         }
     }
 
-    // Kiểm tra tối thiểu 4 phòng
-    if (count($rooms) < 4) {
-        error_log("❌ Not enough rooms: " . count($rooms));
-        header("Location: ../views/dashboard/homestay/edit_homestay.php?id=$id&error=Vui lòng thêm ít nhất 4 phòng (hiện có: " . count($rooms) . ")");
+    // ✅ FIXED: Validate số phòng phải khớp với num_room (không cứng >= 4)
+    $num_room_int = (int)$num_room;
+    if (count($rooms) !== $num_room_int) {
+        error_log("❌ Room count mismatch: Expected $num_room_int, got " . count($rooms));
+        header("Location: ../views/dashboard/homestay/edit_homestay.php?id=$id&error=Số phòng không khớp! Yêu cầu: {$num_room_int} phòng, Thực tế: " . count($rooms) . " phòng");
         exit();
     }
 

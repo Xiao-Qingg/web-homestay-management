@@ -1,5 +1,3 @@
-// Thay thế phần JavaScript trong create_homestay.php từ dòng <script> đến
-
 // Data storage
 let rooms = [];
 let images = [];
@@ -53,10 +51,25 @@ function validateStep(step) {
     input.classList.remove("is-invalid");
   }
 
-  // Validate Step 2: At least 4 rooms required
-  if (step === 2 && rooms.length < 4) {
-    alert("Vui lòng thêm ít nhất 4 phòng trước khi tiếp tục!");
-    return false;
+  // Validate Step 2: Check rooms match with num_room input
+  if (step === 2) {
+    const requiredRooms =
+      parseInt(document.getElementById("num_room").value) || 0;
+
+    if (requiredRooms < 1) {
+      alert("Số phòng phải lớn hơn 0!");
+      currentStep = 1;
+      showStep(1);
+      return false;
+    }
+
+    // Check if number of rooms added matches the required number
+    if (rooms.length !== requiredRooms) {
+      alert(
+        `Bạn cần thêm chính xác ${requiredRooms} phòng! (Hiện tại: ${rooms.length}/${requiredRooms})`
+      );
+      return false;
+    }
   }
 
   return true;
@@ -73,6 +86,23 @@ document.getElementById("prevBtn").addEventListener("click", function () {
   currentStep--;
   showStep(currentStep);
 });
+
+// Update label when num_room changes
+document.getElementById("num_room").addEventListener("input", function () {
+  updateRoomRequirementLabel();
+  renderRooms(); // Re-render to update progress
+});
+
+function updateRoomRequirementLabel() {
+  const numRooms = parseInt(document.getElementById("num_room").value) || 0;
+  const labelElement = document.querySelector(
+    '.form-step[data-step="2"] .form-label.mb-0'
+  );
+
+  if (labelElement && numRooms > 0) {
+    labelElement.innerHTML = `Danh sách phòng <span class="text-danger">* (Cần thêm chính xác ${numRooms} phòng)</span>`;
+  }
+}
 
 // Image preview
 document.getElementById("image_url").addEventListener("input", function () {
@@ -123,6 +153,20 @@ document.querySelectorAll(".selection-card").forEach((card) => {
 
 // Room Modal
 function openRoomModal() {
+  const requiredRooms =
+    parseInt(document.getElementById("num_room").value) || 0;
+
+  if (requiredRooms < 1) {
+    alert("Vui lòng nhập số phòng trước!");
+    document.getElementById("num_room").focus();
+    return;
+  }
+
+  if (rooms.length >= requiredRooms) {
+    alert(`Bạn chỉ được thêm ${requiredRooms} phòng! (Đã thêm đủ)`);
+    return;
+  }
+
   document.getElementById("roomModal").classList.add("show");
 }
 
@@ -159,6 +203,8 @@ function removeRoom(id) {
 
 function renderRooms() {
   const container = document.getElementById("roomsList");
+  const requiredRooms =
+    parseInt(document.getElementById("num_room").value) || 0;
 
   if (rooms.length === 0) {
     container.innerHTML =
@@ -167,12 +213,17 @@ function renderRooms() {
   }
 
   // Show room count status
-  const roomCountInfo =
-    rooms.length < 4
-      ? `<div class="alert alert-warning mb-3"><i class="fas fa-exclamation-triangle"></i> Đã thêm ${
-          rooms.length
-        }/4 phòng (Còn thiếu ${4 - rooms.length} phòng)</div>`
-      : `<div class="alert alert-success mb-3"><i class="fas fa-check-circle"></i> Đã đủ ${rooms.length} phòng</div>`;
+  const alertClass = rooms.length !== requiredRooms ? "warning" : "success";
+  const alertIcon =
+    rooms.length !== requiredRooms
+      ? "fa-exclamation-triangle"
+      : "fa-check-circle";
+  const alertText =
+    rooms.length !== requiredRooms
+      ? `Đã thêm ${rooms.length}/${requiredRooms} phòng (Cần thêm thông tin ${requiredRooms} phòng)`
+      : `Đã đủ ${rooms.length}/${requiredRooms} phòng`;
+
+  const roomCountInfo = `<div class="alert alert-${alertClass} mb-3"><i class="fas ${alertIcon}"></i> ${alertText}</div>`;
 
   container.innerHTML =
     roomCountInfo +
@@ -302,9 +353,14 @@ document
   .addEventListener("submit", function (e) {
     e.preventDefault();
 
-    // Validate minimum 4 rooms before submit
-    if (rooms.length < 4) {
-      alert("Vui lòng thêm ít nhất 4 phòng!");
+    const requiredRooms =
+      parseInt(document.getElementById("num_room").value) || 0;
+
+    // Validate exact number of rooms before submit
+    if (rooms.length !== requiredRooms) {
+      alert(
+        `Vui lòng thêm thông tin ${requiredRooms} phòng! (Hiện tại: ${rooms.length}/${requiredRooms})`
+      );
       currentStep = 2;
       showStep(2);
       return;
@@ -335,3 +391,4 @@ setTimeout(function () {
 
 // Initialize
 showStep(1);
+updateRoomRequirementLabel();

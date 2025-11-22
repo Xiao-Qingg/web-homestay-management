@@ -66,22 +66,25 @@ Hệ thống giúp tự động hóa quy trình quản lý, giảm thiểu sai s
 <img width="916" height="422" alt="image" src="https://github.com/user-attachments/assets/e50b8e04-6340-4fb1-8c87-ae3ab62ae9aa" />
 
 ### Trang Dashboard admin
-<img width="1828" height="844" alt="image" src="https://github.com/user-attachments/assets/0a586cf5-68b9-41de-b145-1b45a6c43012" />
+<img width="1009" height="460" alt="image" src="https://github.com/user-attachments/assets/551b341f-2556-4b8c-b32d-a9571ff813e5" />
+
 
 ### Trang Quản lý Homestay
-<img width="1833" height="849" alt="image" src="https://github.com/user-attachments/assets/21317f30-52fb-463b-b8f7-22acdbb15f5a" />
-
-### Trang Quản lý Booking
-<img width="1851" height="844" alt="image" src="https://github.com/user-attachments/assets/5d7d5ee5-c48d-4078-ab37-088a527e468d" />
+<img width="1009" height="463" alt="image" src="https://github.com/user-attachments/assets/b6869569-3ca9-416f-aa81-47891eb1b1fe" />
 
 ### Trang Quản lý người dùng
-<img width="1852" height="855" alt="image" src="https://github.com/user-attachments/assets/e4f3e7fa-28b6-4869-a363-830285fe1826" />
+<img width="1009" height="463" alt="image" src="https://github.com/user-attachments/assets/d3fadb6c-5783-4f39-9edf-54da349171e4" />
 
-### Trang Thống kê
-<img width="1834" height="846" alt="image" src="https://github.com/user-attachments/assets/d38ab5b7-a178-4649-b2b9-d9602e9bcba3" />
+### Trang Quản lý Booking
+<img width="1009" height="469" alt="image" src="https://github.com/user-attachments/assets/68aef613-c28f-401f-82fa-c00dfe09313e" />
+
+### Trang Chi tiết Booking
+<img width="1009" height="470" alt="image" src="https://github.com/user-attachments/assets/aaf2b691-466d-4da6-991e-5a25bfa83333" />
+
 
 ### Trang Cài đặt
-<img width="1835" height="851" alt="image" src="https://github.com/user-attachments/assets/895ab1dd-5df9-45a8-bfa1-7195fe540aaa" />
+<img width="1009" height="464" alt="image" src="https://github.com/user-attachments/assets/6cc07d31-8fe3-4c34-96e4-ed91317506dc" />
+
 
 
 ## ⚙️ Cài đặt và chạy dự án
